@@ -16,14 +16,81 @@ class Program_studi extends CI_Controller {
 	}
 
 	public function index(){
-
-		$prodi = $this->prodi->select_all();
-		if($prodi){
-			$this->data['prodi'] = $prodi;
-		}else{
-			$this->data['error'] = $this->prodi->db->error();
-		}
+		$this->data['prodi'] = $this->prodi->get_datatables();
 		$this->load->view('template',$this->data);
 	}
+	public function ajax_list()
+    {
+        $list = $this->prodi->get_datatables();
+        $data = array();
+        foreach ($list as $prodi) {
+            $row = array(
+            'id' => $prodi['id_prodi'],
+            'nama_prodi' => $prodi['nama_prodi']
+            	);
+            $data[] = $row;
+        }
+ 
+        $output = array(
+                        "data" => $data,
+                );
+        //output to json format
+        echo json_encode($output);
+    }
+ 
+    public function ajax_edit($id)
+    {
+        $data = $this->prodi->get_by_id($id);
+        echo json_encode($data);
+    }
+ 
+    public function ajax_add()
+    {
+        $this->_validate();
+        $data = array(
+                'id_prodi' => '',
+                'nama_prodi' => $this->input->post('nama_prodi'),
+            );
+        $insert = $this->prodi->save($data);
+        echo json_encode(array("status" => TRUE));
+    }
+ 
+    public function ajax_update(){
+        $this->_validate();
+        $data = array(
+	                'id_prodi' => $this->input->post('id'),
+	                'nama_prodi' => $this->input->post('nama_prodi'),
+                );
+        $this->prodi->update($data);
+        echo json_encode(array("status" => TRUE));
+    }
+ 
+    public function ajax_delete($id)
+    {
+        $this->prodi->delete_by_id($id);
+        echo json_encode(array("status" => TRUE));
+    }
+ 
+ 
+    private function _validate()
+    {
+        $data = array();
+        $data['error_string'] = array();
+        $data['inputerror'] = array();
+        $data['status'] = TRUE;
+ 
+        if($this->input->post('nama_prodi') == '')
+        {
+            $data['inputerror'][] = 'nama_prodi';
+            $data['error_string'][] = 'Nama Program Studi Belum Diisi';
+            $data['status'] = FALSE;
+        }
+ 
+        if($data['status'] === FALSE)
+        {
+            echo json_encode($data);
+            exit();
+        }
+    }
 }
 ?>

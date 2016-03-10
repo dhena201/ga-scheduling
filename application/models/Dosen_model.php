@@ -3,16 +3,77 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Dosen_model extends CI_Model {
 
-	public $db_tabel = 'dosen';
-	public $db_fk = 'prodi';
+	var $table = 'dosen';
+    var $column = array('nama_dosen','nama_prodi'); //set column field database for order and search
+    var $order = array('nama_dosen' => 'desc','nama_prodi' => 'desc'); // default order
 	public function __construct(){
 		parent::__construct();
 	}
 
-	public function select_all(){
-		$sql = 'select dosen.nama_dosen,dosen.id_dosen,prodi.nama_prodi from dosen join prodi on dosen.id_prodi = prodi.id_prodi order by prodi.nama_prodi,dosen.nama_dosen';
-		$data = $this->db->query($sql);
-		return $data->result_array();
-	}
+	private function _get_datatables_query(){
+        $this->db->select('*');
+        $this->db->from($this->table);
+ 		$this->db->join('prodi','prodi.id_prodi=dosen.id_prodi');
+        $i = 0;
+     
+        foreach ($this->column as $item) // loop column
+        {
+            $column[$i] = $item; // set column array variable to order processing
+            $i++;
+        }
+         
+        if(isset($_POST['order'])) // here order processing
+        {
+            $this->db->order_by($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+        }
+        else if(isset($this->order))
+        {
+            $order = $this->order;
+            $this->db->order_by(key($order), $order[key($order)]);
+        }
+    }
+     
+    function get_datatables(){
+    	$this->_get_datatables_query();   	
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+ 
+    function count_filtered(){
+        $this->_get_datatables_query();
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+ 
+    public function count_all(){
+        $this->db->from($this->table);
+        return $this->db->count_all_results();
+    }
+ 
+    public function get_by_id($id){
+        $this->db->from($this->table);
+        $this->db->where('id_dosen',$id);
+        $query = $this->db->get();
+ 
+        return $query->row();
+    }
+ 
+    public function save($data){
+        $this->db->insert($this->table, $data);
+        return $this->db->insert_id();
+    }
+ 
+    public function update($data){
+    	$this->db->where('id_dosen',$data['id_dosen']);
+        $this->db->update($this->table, $data);
+        return $this->db->affected_rows();
+    }
+ 
+    public function delete_by_id($id){
+        $this->db->where('id_dosen', $id);
+        $this->db->delete($this->table);
+    }
+ 
 }
+
 ?>

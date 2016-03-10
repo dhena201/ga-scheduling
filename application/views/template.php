@@ -3,6 +3,10 @@
 
 <head>
     <?php $this->load->view('head'); ?>
+    <script src="<?php echo base_url('asset/js/jquery.min.js'); ?>"></script>
+    <!-- DataTables -->
+    <script src="<?php echo base_url('asset/js/plugins/datatables/jquery.dataTables.js'); ?>"></script>
+    <script src="<?php echo base_url('asset/js/plugins/datatables/datatables-bs3.js'); ?>"></script>
 </head>
 
 <body>
@@ -55,11 +59,13 @@
     <!-- /#wrapper -->
 
     <!-- GLOBAL SCRIPTS -->
-    <script src="<?php echo base_url('asset/js/jquery.min.js'); ?>"></script>
+    
     <script src="<?php echo base_url('asset/js/plugins/bootstrap/bootstrap.min.js'); ?>"></script>
     <script src="<?php echo base_url('asset/js/plugins/slimscroll/jquery.slimscroll.min.js'); ?>"></script>
     <script src="<?php echo base_url('asset/js/plugins/popupoverlay/jquery.popupoverlay.js'); ?>"></script>
     <script src="<?php echo base_url('asset/js/plugins/popupoverlay/defaults.js'); ?>"></script>
+    <!-- HISRC Retina Images -->
+    <script src="<?php echo base_url('asset/js/plugins/hisrc/hisrc.js'); ?>"></script>
     <!-- Logout Notification Box -->
     <div id="logout">
         <?php $this->load->view('logout');?>
@@ -67,40 +73,14 @@
     <!-- /#logout -->
     <!-- Logout Notification jQuery -->
     <script src="<?php echo base_url('asset/js/plugins/popupoverlay/logout.js'); ?>"></script>
-    <!-- HISRC Retina Images -->
-    <script src="<?php echo base_url('asset/js/plugins/hisrc/hisrc.js'); ?>"></script>
-
     <!-- PAGE LEVEL PLUGIN SCRIPTS -->
-    <!-- HubSpot Messenger -->
-    <script src="<?php echo base_url('asset/js/plugins/messenger/messenger.min.js'); ?>"></script>
-    <script src="<?php echo base_url('asset/js/plugins/messenger/messenger-theme-flat.js'); ?>"></script>
-    <!-- Date Range Picker -->
-    <script src="<?php echo base_url('asset/js/plugins/daterangepicker/moment.js'); ?>"></script>
-    <script src="<?php echo base_url('asset/js/plugins/daterangepicker/daterangepicker.js'); ?>"></script>
-    <!-- Morris Charts -->
-    <script src="<?php echo base_url('asset/js/plugins/morris/raphael-2.1.0.min.js'); ?>"></script>
-    <script src="<?php echo base_url('asset/js/plugins/morris/morris.js'); ?>"></script>
     <!-- Flot Charts -->
     <script src="<?php echo base_url('asset/js/plugins/flot/jquery.flot.js'); ?>"></script>
     <script src="<?php echo base_url('asset/js/plugins/flot/jquery.flot.resize.js'); ?>"></script>
-    <!-- Sparkline Charts -->
-    <script src="<?php echo base_url('asset/js/plugins/sparkline/jquery.sparkline.min.js'); ?>"></script>
-    <!-- Moment.js -->
-    <script src="<?php echo base_url('asset/js/plugins/moment/moment.min.js'); ?>"></script>
-    <!-- jQuery Vector Map -->
-    <script src="<?php echo base_url('asset/js/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js'); ?>"></script>
-    <script src="<?php echo base_url('asset/js/plugins/jvectormap/maps/jquery-jvectormap-world-mill-en.js'); ?>"></script>
-    <script src="<?php echo base_url('asset/js/demo/map-demo-data.js'); ?>"></script>
-    <!-- Easy Pie Chart -->
-    <script src="<?php echo base_url('asset/js/plugins/easypiechart/jquery.easypiechart.min.js'); ?>"></script>
-    <!-- DataTables -->
-    <script src="<?php echo base_url('asset/js/plugins/datatables/jquery.dataTables.js'); ?>"></script>
-    <script src="<?php echo base_url('asset/js/plugins/datatables/datatables-bs3.js'); ?>"></script>
-
+    
     <!-- THEME SCRIPTS -->
 
     <script src="<?php echo base_url('asset/js/flex.js'); ?>"></script>
-    <script src="<?php echo base_url('asset/js/demo/dashboard-demo.js'); ?>"></script>
     <script src="<?php echo base_url('asset/js/demo/advanced-tables-demo.js');?>"></script>
 
 </body>
