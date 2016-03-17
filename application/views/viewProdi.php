@@ -12,7 +12,6 @@
         </div>
         <div class="portlet-body">
             <a class="btn btn-success" onclick="add_data()"><i class="fa fa-plus"></i> Tambah</a>
-            <a class="btn btn-default" onclick="reload_table()"><i class="fa fa-refresh"></i> Reload</a>
             <br/><br/>
             <div class="table-responsive">
                 <table id="table" class="table table-striped table-bordered table-hover table-green">
@@ -56,14 +55,14 @@ $(document).ready(function() {
     //datatables
     table = $('#table').DataTable({
  
-        // "processing": true, //Feature control the processing indicator.
-        // "serverSide": true, //Feature control DataTables' server-side processing mode.
+        "processing": true, //Feature control the processing indicator.
+        "serverSide": true, //Feature control DataTables' server-side processing mode.
         "order": [], //Initial no order.
  
         // Load data for the table's content from an Ajax source
         "ajax": {
             "url": "<?php echo base_url('program_studi/ajax_list')?>",
-            "type": "GET",
+            "type": "POST",
             'dataSrc' : 'data',
         },
         "columns":[
@@ -196,7 +195,7 @@ function save()
  
 function delete_data(id)
 {
-    if(confirm('Are you sure delete this data?'))
+    if(confirm('Apakah Anda Yakin Menghapus Data Ini?'))
     {
         // ajax delete data to database
         $.ajax({

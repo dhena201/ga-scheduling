@@ -24,6 +24,22 @@ class Mata_kuliah_model extends CI_Model {
      
         foreach ($this->column as $item) // loop column
         {
+            if($_POST['search']['value']) // if datatable send POST for search
+            {
+                 
+                if($i===0) // first loop
+                {
+                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $_POST['search']['value']);
+                }
+                else
+                {
+                    $this->db->or_like($item, $_POST['search']['value']);
+                }
+ 
+                if(count($this->column) - 1 == $i) //last loop
+                    $this->db->group_end(); //close bracket
+            }
             $column[$i] = $item; // set column array variable to order processing
             $i++;
         }

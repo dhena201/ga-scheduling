@@ -16,14 +16,15 @@ class Program_studi extends CI_Controller {
 	}
 
 	public function index(){
-		$this->data['prodi'] = $this->prodi->get_datatables();
 		$this->load->view('template',$this->data);
 	}
 	public function ajax_list()
     {
         $list = $this->prodi->get_datatables();
         $data = array();
+        $no = $_POST['start'];
         foreach ($list as $prodi) {
+            $no++;
             $row = array(
             'id' => $prodi['id_prodi'],
             'nama_prodi' => $prodi['nama_prodi']
@@ -32,6 +33,9 @@ class Program_studi extends CI_Controller {
         }
  
         $output = array(
+                        "draw" => $_POST['draw'],
+                        "recordsTotal" => $this->prodi->count_all(),
+                        "recordsFiltered" => $this->prodi->count_filtered(),
                         "data" => $data,
                 );
         //output to json format

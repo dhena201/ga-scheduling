@@ -16,14 +16,95 @@ class Ruang extends CI_Controller {
 	}
 
 	public function index(){
-
-		$ruang = $this->ruang->select_all();
-		if($ruang){
-			$this->data['ruang'] = $ruang;
-		}else{
-			$this->data['error'] = $this->ruang->db->error();
-		}
 		$this->load->view('template',$this->data);
 	}
+	public function ajax_list()
+    {
+        $list = $this->ruang->get_datatables();
+        $data = array();
+        $no = $_POST['start'];
+        foreach ($list as $ruang) {
+            $no++;
+            $row = array(
+            	"id_ruang" => $ruang['id_ruang'],
+            	"kapasitas" => $ruang['kapasitas'],
+            	"nama_ruang" => $ruang['nama_ruang'],
+            	);
+
+                     
+            $data[] = $row;
+        }
+ 
+        $output = array(
+                        "draw" => $_POST['draw'],
+                        "recordsTotal" => $this->ruang->count_all(),
+                        "recordsFiltered" => $this->ruang->count_filtered(),
+                        "data" => $data,
+                );
+        //output to json format
+        echo json_encode($output);
+    }
+ 
+    public function ajax_edit($id)
+    {
+        $data = $this->ruang->get_by_id($id);
+        echo json_encode($data);
+    }
+ 
+    public function ajax_add()
+    {
+        $this->_validate();
+        $data = array(
+                'kapasitas' => $this->input->post('kapasitas'),
+                'nama_ruang' => $this->input->post('nama_ruang'),
+            );
+        $insert = $this->ruang->save($data);
+        echo json_encode(array("status" => TRUE));
+    }
+ 
+    public function ajax_update()
+    {
+        $this->_validate();
+        $data = array(
+                'id_ruang' => $this->input->post('id'),
+                'kapasitas' => $this->input->post('kapasitas'),
+                'nama_ruang' => $this->input->post('nama_ruang'),
+            );
+        $this->ruang->update($data);
+        echo json_encode(array("status" => TRUE));
+    }
+ 
+    public function ajax_delete($id)
+    {
+        $this->ruang->delete_by_id($id);
+        echo json_encode(array("status" => TRUE));
+    }
+ 
+ 
+    private function _validate()
+    {
+        $data = array();
+        $data['error_string'] = array();
+        $data['inputerror'] = array();
+        $data['status'] = TRUE;
+ 
+        if($this->input->post('nama_ruang') == '')
+        {
+            $data['inputerror'][] = 'nama_ruang';
+            $data['error_string'][] = 'Nama Ruangan Belum Diisi';
+            $data['status'] = FALSE;
+        }
+ 		if($this->input->post('kapasitas') == '')
+        {
+            $data['inputerror'][] = 'kapasitas';
+            $data['error_string'][] = 'Kapasitas Ruangan Belum Diisi';
+            $data['status'] = FALSE;
+        }
+        if($data['status'] === FALSE)
+        {
+            echo json_encode($data);
+            exit();
+        }
+    }
 }
 ?>
