@@ -5,7 +5,7 @@ class Dosen_model extends CI_Model {
 
 	var $table = 'dosen';
     var $column = array('nama_dosen','nama_prodi'); //set column field database for order and search
-    var $order = array('nama_dosen' => 'desc','nama_prodi' => 'desc'); // default order
+    var $order = array('nama_prodi' => 'desc'); // default order
 	public function __construct(){
 		parent::__construct();
 	}
@@ -18,6 +18,22 @@ class Dosen_model extends CI_Model {
      
         foreach ($this->column as $item) // loop column
         {
+            if($_POST['search']['value']) // if datatable send POST for search
+            {
+                 
+                if($i===0) // first loop
+                {
+                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $_POST['search']['value']);
+                }
+                else
+                {
+                    $this->db->or_like($item, $_POST['search']['value']);
+                }
+ 
+                if(count($this->column) - 1 == $i) //last loop
+                    $this->db->group_end(); //close bracket
+            }
             $column[$i] = $item; // set column array variable to order processing
             $i++;
         }

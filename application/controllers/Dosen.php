@@ -24,7 +24,9 @@ class Dosen extends CI_Controller {
     {
         $list = $this->dosen->get_datatables();
         $data = array();
+        $no = $_POST['start'];
         foreach ($list as $dosen) {
+            $no++;
             $row = array(
             	"id_dosen" => $dosen['id_dosen'],
             	"nama_dosen" => $dosen['nama_dosen'],
@@ -36,6 +38,9 @@ class Dosen extends CI_Controller {
         }
  
         $output = array(
+                        "draw" => $_POST['draw'],
+                        "recordsTotal" => $this->dosen->count_all(),
+                        "recordsFiltered" => $this->dosen->count_filtered(),
                         "data" => $data,
                 );
         //output to json format

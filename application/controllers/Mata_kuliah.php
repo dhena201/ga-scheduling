@@ -17,15 +17,16 @@ class Mata_kuliah extends CI_Controller {
 	}
 
 	public function index(){
-
-		$this->data['prodi'] = $this->prodi->get_datatables();
+        $this->data['prodi'] = $this->prodi->get_datatables();
 		$this->load->view('template',$this->data);
 	}
 	public function ajax_list()
     {
         $list = $this->matkul->get_datatables();
         $data = array();
+        $no = $_POST['start'];
         foreach ($list as $matkul) {
+            $no++;
             $row = array(
             'id' => $matkul['id_kuliah'],
             'nama_kuliah' => $matkul['nama_kuliah'],
@@ -37,6 +38,9 @@ class Mata_kuliah extends CI_Controller {
         }
  
         $output = array(
+                        "draw" => $_POST['draw'],
+                        "recordsTotal" => $this->matkul->count_all(),
+                        "recordsFiltered" => $this->matkul->count_filtered(),
                         "data" => $data,
                 );
         //output to json format
