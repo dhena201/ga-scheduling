@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Prodi_model extends CI_Model {
 
 	var $table = 'prodi';
-    var $column = array('id_prodi','nama_prodi'); //set column field database for order and search
+    var $column = array('nama_prodi'); //set column field database for order and search
     var $order = array('id_prodi' => 'asc'); // default order
 	public function __construct(){
 		parent::__construct();
@@ -50,6 +50,9 @@ class Prodi_model extends CI_Model {
     }
 	function get_datatables(){
         $this->_get_datatables_query();
+        if(isset($_POST['length']) and $_POST['length']!= -1){
+            $this->db->limit($_POST['length'], $_POST['start']); 
+        }
         $query = $this->db->get();
         return $query->result_array();
     }

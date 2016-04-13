@@ -29,7 +29,7 @@
                             <th>Dosen</th>
                             <th>Program Studi</th>
                             <th>Kelas</th>
-                            <th>Kapasitas Kelas/th>
+                            <th>Kapasitas</th>
                             <th>Ruang</th>
                             <th>Hari</th>
                             <th>Jam</th>

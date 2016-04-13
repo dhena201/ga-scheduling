@@ -2,27 +2,27 @@
 <div class="row">
 
 <!-- Basic Responsive Table -->
-<div class="col-lg-12">
-    <div class="portlet portlet-default">
-        <div class="portlet-heading">
-            <div class="portlet-title">
-                <h4>Data Kelas</h4>
+    <div class="col-lg-12">
+        <div class="portlet portlet-default">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Data Kelas</h4>
+                </div>
+                <div class="clearfix"></div>
             </div>
-            <div class="clearfix"></div>
-        </div>
-        <div class="portlet-body">
-            <button class="btn btn-success" onclick="add_data()"><i class="fa fa-plus"></i> Tambah</button>
-            <br/>
-            <br/>
-            <div class="table-responsive">
-                <table id="table" class="table table-striped table-bordered table-hover table-green">
+            <div class="portlet-body">
+                <button class="btn btn-success" onclick="add_data()"><i class="fa fa-plus"></i> Tambah</button>
+                <br/>
+                <br/>
+                <table id="example-table" class="table table-striped table-bordered table-hover table-green" width="100%">
                     <thead>
                         <tr>
                             <th>Mata Kuliah</th>
                             <th>Dosen</th>
+                            <th>Kelas</th>
                             <th>Program Studi</th>
                             <th>Kapasitas</th>
-                            <th>Aksi</th>
+                            <th style="width:110px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,10 +33,11 @@
                 </table>
             </div>
         </div>
+        <!-- /.portlet -->
     </div>
-    <!-- /.portlet -->
+    <!-- /.col-lg-6 -->
 </div>
-<!-- /.col-lg-6 -->
+
 <script type="text/javascript">
  
 var save_method; //for save method string
@@ -45,7 +46,7 @@ var table;
 $(document).ready(function() {
  
     //datatables
-    table = $('#table').DataTable({
+    table = $('#example-table').DataTable({
  
         "processing": true, //Feature control the processing indicator.
         "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -59,10 +60,11 @@ $(document).ready(function() {
         "columns" :[
             {"data" : "nama_kuliah"},
             {"data" : "nama_dosen"},
+            {"data" : "kelas"},
             {"data" : "nama_prodi"},
             {"data" : "kapasitas"},
             {"data":"id_kelas",render:function(data){
-                var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_data("+data+")'><i class='fa fa-trash-o'></i></a>";
+                var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_data("+data+")'><i class='fa fa-trash-o'></i></a>";
                 return btn;
             }
             }
@@ -91,12 +93,90 @@ $(document).ready(function() {
         $(this).parent().parent().removeClass('has-error');
         $(this).next().empty();
     });
- 
+    //dependent dropdown
+    $("#kategori").change(function(){
+        $("#mk > option").remove();
+        $("#mk").append("<option value=''>--Pilih Mata Kuliah--</option>");
+        var id_kategori = $("#kategori").val();
+        if(id_kategori){
+            get_mk(id_kategori);
+        }
+        console.log(id_kategori);
+        
+        
+    });
+    $("#asdos").change(function(){
+        $("#dosen > option").remove();
+        $("#dosen").append("<option value=''>--Pilih Dosen Pengampu--</option>");
+        var id = $("#asdos").val();
+        if(id){
+            get_dosen(id);
+        }
+    });
+    $('#mk').change(function(){
+        var id = $("#mk").val();
+        if(id){
+            get_kelas(id);
+        }
+    });
 });
- 
+function get_mk(id,id_kuliah){
+    $.ajax({
+        url : "<?php echo base_url('kelas/ajax_get_mk/')?>/" + id,
+        type : "GET",
+        dataType : "JSON",
+        success: function(data){
+            $.each(data, function(i, data){
+                $("#mk").append("<option value='"+data.id_kuliah+"'>"+data.nama_kuliah+"</option>");
+            });
+            if(id_kuliah){
+                $('#mk').val(id_kuliah);
+            }
+        },
+         error: function (jqXHR, textStatus, errorThrown){
+            alert('Error get data from ajax');
+        }
+    });
+}
+function get_dosen(id,id_dosen){
+    $.ajax({
+        url : "<?php echo base_url('kelas/ajax_get_dosen/')?>/" + id,
+        type : "GET",
+        dataType : "JSON",
+        success: function(data){
+            $.each(data, function(i, data){
+                $("#dosen").append("<option value='"+data.id_dosen+"'>"+data.nama_dosen+"</option>");
+                console.log(data.id_dosen);
+            });
+            if(id_dosen){
+                $('#dosen').val(id_dosen);
+            }
+        },
+         error: function (jqXHR, textStatus, errorThrown){
+            alert('Error get data from ajax');
+        }
+    });
+}
+function get_kelas(id){
+    $.ajax({
+        url : "<?php echo base_url('kelas/ajax_get_kelas/')?>/" + id,
+        type : "GET",
+        dataType : "JSON",
+        success: function(data){
+            $("#kelas").val(data);
+        },
+         error: function (jqXHR, textStatus, errorThrown){
+            alert('Error get data from ajax');
+        }
+    });
+}
 function add_data()
 {
     save_method = 'add';
+    $("#mk > option").remove();
+    $("#mk").append("<option value=''>--Pilih Mata Kuliah--</option>");
+    $("#dosen > option").remove();
+    $("#dosen").append("<option value=''>--Pilih Dosen Pengampu--</option>");
     $('#form')[0].reset(); // reset form on modals
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
@@ -119,11 +199,14 @@ function edit_data(id)
         dataType: "JSON",
         success: function(data)
         {
- 
-            $('[name="id"]').val(data.id_kelas);
-            $('[name="id_kuliah"]').val(data.id_kuliah);
-            $('[name="id_dosen"]').val(data.id_dosen);
-            $('[name="Kapasitas"]').val(data.kapasitas);
+            get_mk(data.id_prodi,data.id_kuliah);
+            get_dosen(data.id_prodi,data.id_dosen);
+            $('[name="id"]').val(data.id_kelas);    
+            $('[name="id_prodi"]').val(data.id_prodi);
+            $('#mk').val(data.id_kuliah);
+            $('[name="asal_prodi"]').val(data.id_prodi);
+            $('[name="kelas"]').val(data.kelas);
+            $('[name="kapasitas"]').val(data.kapasitas);
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Ubah Data'); // Set title to Bootstrap modal title
  
@@ -215,7 +298,7 @@ function delete_data(id)
  
 </script>
 <!-- Bootstrap modal -->
-<div class="modal fade" id="modal_form" role="dialog">
+<div class="modal modal-flex fade" id="modal_form" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -228,9 +311,10 @@ function delete_data(id)
                     <div class="form-group">
                         <label class="control-label col-md-3">Program Studi</label>
                         <div class="col-md-9">
-                            <select name="id_prodi" class="form-control">
+                            <select id="kategori" name="id_prodi" class="form-control">
                                 <option value="">--Pilih Program Studi--</option>
-                                <?php foreach($prodi as $row){ 
+                                <?php foreach($prodi as $row){
+                                if($row['nama_prodi']!="Non-Teknik") 
                                 echo "<option value='$row[id_prodi]'>$row[nama_prodi]</option>";
                                 }
                                 ?>
@@ -242,7 +326,7 @@ function delete_data(id)
                         <div class="form-group">
                             <label class="control-label col-md-3">Mata Kuliah</label>
                             <div class="col-md-9">
-                                <select name="id_kuliah" class="form-control">
+                                <select id="mk" name="id_kuliah" class="form-control">
                                     <option value="">--Pilih Mata Kuliah--</option>
                                 </select>
                                 <span class="help-block"></span>
@@ -253,17 +337,36 @@ function delete_data(id)
                         <div class="form-group">
                             <label class="control-label col-md-3">Dosen</label>
                             <div class="col-md-9">
-                                <select name="id_dosen" class="form-control">
-                                    <option value="">--Pilih Dosen Pengampu--</option>
-                                </select>
-                                <span class="help-block"></span>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                    <select id="asdos" name="asal_prodi" class="form-control">
+                                        <option  value="">--Asal Dosen--</option>
+                                        <?php foreach($prodi as $row){ 
+                                            echo "<option value='$row[id_prodi]'>$row[nama_prodi]</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <select id="dosen" name="id_dosen" class="form-control">
+                                            <option value="">--Pilih Dosen Pengampu--</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Kelas</label>
+                        <div class="col-md-9">
+                            <input id="kelas" name="kelas" type="text" class="form-control" readonly>
+                            <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3">Kapasitas Kelas</label>
                         <div class="col-md-9">
-                            <input name="kapasitas" type="number" class="form-control" min="0">
+                            <input name="kapasitas" type="number" class="form-control" min="0" value="0">
                             <span class="help-block"></span>
                         </div>
                     </div>
