@@ -19,7 +19,7 @@
                     <thead>
                         <tr>
                             <th>Nama Ruangan</th>
-                            <th>Kapasitas</th>
+                            <th>Kapasitas Ruangan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
