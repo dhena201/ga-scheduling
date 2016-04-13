@@ -27,7 +27,7 @@ class Ruang extends CI_Controller {
             $no++;
             $row = array(
             	"id_ruang" => $ruang['id_ruang'],
-            	"kapasitas" => $ruang['kapasitas_ruang'],
+            	"kapasitas" => $ruang['kapasitas'],
             	"nama_ruang" => $ruang['nama_ruang'],
             	);
 

@@ -50,10 +50,7 @@ class Dosen_model extends CI_Model {
     }
      
     function get_datatables(){
-    	$this->_get_datatables_query();
-        if($_POST['length'] != -1){
-            $this->db->limit($_POST['length'], $_POST['start']); 
-        }   	
+    	$this->_get_datatables_query();   	
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -76,14 +73,7 @@ class Dosen_model extends CI_Model {
  
         return $query->row();
     }
-    
-    public function get_by_prodi($id){
-        $this->db->from($this->table);
-        $this->db->where('id_prodi',$id);
-        $query = $this->db->get();
-        return $query->result();
-    }
-
+ 
     public function save($data){
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();

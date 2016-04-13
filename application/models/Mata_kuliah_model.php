@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Mata_kuliah_model extends CI_Model {
 
 	var $table = 'mata_kuliah';
-	var $column = array('nama_kuliah','sks','semester','nama_prodi'); //set column field database for order and search
+	var $column = array('nama_kuliah','nama_prodi'); //set column field database for order and search
     var $order = array( array(  'field' => 'nama_prodi',
     							'type' => 'asc'
     						),
@@ -24,7 +24,7 @@ class Mata_kuliah_model extends CI_Model {
      
         foreach ($this->column as $item) // loop column
         {
-            if(isset($_POST['search']['value'])) // if datatable send POST for search
+            if($_POST['search']['value']) // if datatable send POST for search
             {
                  
                 if($i===0) // first loop
@@ -58,9 +58,6 @@ class Mata_kuliah_model extends CI_Model {
     }
 	function get_datatables(){
         $this->_get_datatables_query();
-        if($_POST['length'] != -1){
-            $this->db->limit($_POST['length'], $_POST['start']); 
-        }
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -83,12 +80,7 @@ class Mata_kuliah_model extends CI_Model {
  
         return $query->row();
     }
-    public function get_by_prodi($id){
-        $this->db->from($this->table);
-        $this->db->where('id_prodi',$id);
-        $query = $this->db->get();
-        return $query->result();
-    }
+ 
     public function save($data){
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();

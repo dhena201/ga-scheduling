@@ -3,6 +3,10 @@
 
 <head>
     <?php $this->load->view('head'); ?>
+    <script src="<?php echo base_url('asset/js/jquery.min.js'); ?>"></script>
+    <!-- DataTables -->
+    <script src="<?php echo base_url('asset/js/plugins/datatables/jquery.dataTables.js'); ?>"></script>
+    <script src="<?php echo base_url('asset/js/plugins/datatables/datatables-bs3.js'); ?>"></script>
 </head>
 
 <body>
@@ -57,7 +61,6 @@
     <!-- GLOBAL SCRIPTS -->
     
     <script src="<?php echo base_url('asset/js/plugins/bootstrap/bootstrap.min.js'); ?>"></script>
-    
     <script src="<?php echo base_url('asset/js/plugins/slimscroll/jquery.slimscroll.min.js'); ?>"></script>
     <script src="<?php echo base_url('asset/js/plugins/popupoverlay/jquery.popupoverlay.js'); ?>"></script>
     <script src="<?php echo base_url('asset/js/plugins/popupoverlay/defaults.js'); ?>"></script>
@@ -71,11 +74,14 @@
     <!-- Logout Notification jQuery -->
     <script src="<?php echo base_url('asset/js/plugins/popupoverlay/logout.js'); ?>"></script>
     <!-- PAGE LEVEL PLUGIN SCRIPTS -->
+    <!-- Flot Charts -->
+    <script src="<?php echo base_url('asset/js/plugins/flot/jquery.flot.js'); ?>"></script>
+    <script src="<?php echo base_url('asset/js/plugins/flot/jquery.flot.resize.js'); ?>"></script>
     
     <!-- THEME SCRIPTS -->
-    
-    <script src="<?php echo base_url('asset/js/flex.js'); ?>"></script>
 
+    <script src="<?php echo base_url('asset/js/flex.js'); ?>"></script>
+    <script src="<?php echo base_url('asset/js/demo/advanced-tables-demo.js');?>"></script>
 
 </body>
 
