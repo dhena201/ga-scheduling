@@ -1,19 +1,24 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Prodi_model extends CI_Model {
+class Jadwal_model extends CI_Model {
 
-	var $table = 'prodi';
-    var $column = array('nama_prodi'); //set column field database for order and search
-    var $order = array('id_prodi' => 'asc'); // default order
+	var $table = 'jadwal';
+    var $column = array('nama_kuliah','nama_dosen','nama_prodi','kelas','kapasitas','nama_ruang','hari','jam'); //set column field database for order and search
+    var $order = array('nama_prodi' => 'desc'); // default order
 	public function __construct(){
 		parent::__construct();
-		$this->load->database();
 	}
+
 	private function _get_datatables_query(){
-         
+        $this->db->select('*');
+        $this->db->select("DATE_FORMAT(jam,'%H:%i') as jam");
         $this->db->from($this->table);
- 
+        $this->db->join('kelas','jadwal.id_kelas=kelas.id_kelas');
+        $this->db->join('mata_kuliah','kelas.id_kuliah=mata_kuliah.id_kuliah');
+        $this->db->join('dosen','kelas.id_dosen=dosen.id_dosen');
+ 		$this->db->join('prodi','prodi.id_prodi=mata_kuliah.id_prodi');
+        $this->db->join('ruang','jadwal.id_ruang=ruang.id_ruang');
         $i = 0;
      
         foreach ($this->column as $item) // loop column
@@ -48,11 +53,13 @@ class Prodi_model extends CI_Model {
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
-	function get_datatables(){
-        $this->_get_datatables_query();
+     
+    function get_datatables($thn_ajar){
+    	$this->_get_datatables_query($thn_ajar);  
         if(isset($_POST['length']) and $_POST['length']!= -1){
             $this->db->limit($_POST['length'], $_POST['start']); 
         }
+        $this->db->where('thn_ajar',$thn_ajar);	
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -69,11 +76,18 @@ class Prodi_model extends CI_Model {
     }
  
     public function get_by_id($id){
-        $this->db->from($this->table);
-        $this->db->where('id_prodi',$id);
+        $this->_get_datatables_query();
+        $this->db->where('id_jadwal',$id);
         $query = $this->db->get();
  
         return $query->row();
+    }
+    public function get_thn_ajar(){
+        $this->db->from($this->table);
+        $this->db->select('thn_ajar');
+        $query = $this->db->get();
+ 
+        return $query->result_array();
     }
  
     public function save($data){
@@ -82,13 +96,13 @@ class Prodi_model extends CI_Model {
     }
  
     public function update($data){
-    	$this->db->where('id_prodi',$data['id_prodi']);
+    	$this->db->where('id_jadwal',$data['id_jadwal']);
         $this->db->update($this->table, $data);
         return $this->db->affected_rows();
     }
  
     public function delete_by_id($id){
-        $this->db->where('id_prodi', $id);
+        $this->db->where('id_jadwal', $id);
         $this->db->delete($this->table);
     }
 }

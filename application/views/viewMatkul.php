@@ -1,28 +1,27 @@
 <!-- begin BASIC TABLES MAIN ROW -->
 <div class="row">
 
-<!-- Basic Responsive Table -->
-<div class="col-lg-12">
-    <div class="portlet portlet-default">
-        <div class="portlet-heading">
-            <div class="portlet-title">
-                <h4>Data Mata Kuliah</h4>
+    <!-- Basic Responsive Table -->
+    <div class="col-lg-12">
+        <div class="portlet portlet-default">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Data Mata Kuliah</h4>
+                </div>
+                <div class="clearfix"></div>
             </div>
-            <div class="clearfix"></div>
-        </div>
-        <div class="portlet-body">
-            <button class="btn btn-success" onclick="add_data()"><i class="fa fa-plus"></i> Tambah</button>
-            <br/>
-            <br/>
-            <div class="table-responsive">
-                <table id="table" class="table table-striped table-bordered table-hover table-green">
+            <div class="portlet-body">
+                <button class="btn btn-success" onclick="add_data()"><i class="fa fa-plus"></i> Tambah</button>
+                <br/>
+                <br/>
+                <table id="table" class="table table-striped table-bordered table-hover table-green" width="100%">
                     <thead>
                         <tr>
                             <th>Mata Kuliah</th>
                             <th>SKS</th>
                             <th>Semester</th>
                             <th>Program Studi</th>
-                            <th>Aksi</th>
+                            <th style="width:110px;;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,10 +29,10 @@
                 </table>
             </div>
         </div>
+        <!-- /.portlet -->
     </div>
-    <!-- /.portlet -->
+    <!-- /.col-lg-6 -->
 </div>
-<!-- /.col-lg-6 -->
 <script type="text/javascript">
  
 var save_method; //for save method string
@@ -59,7 +58,7 @@ $(document).ready(function() {
             {"data" : "semester"},
             {"data" : "nama_prodi"},
             {"data":"id",render:function(data){
-                var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_data("+data+")'><i class='fa fa-trash-o'></i></a>";
+                var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_data("+data+")'><i class='fa fa-trash-o'></i></a>";
                 return btn;
             }
             }
@@ -213,7 +212,7 @@ function delete_data(id)
  
 </script>
 <!-- Bootstrap modal -->
-<div class="modal fade" id="modal_form" role="dialog">
+<div class="modal modal-flex fade" id="modal_form" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -266,7 +265,8 @@ function delete_data(id)
                             <div class="col-md-9">
                                 <select name="id_prodi" class="form-control">
                                     <option value="">--Pilih Program Studi--</option>
-                                    <?php foreach($prodi as $row){ 
+                                    <?php foreach($prodi as $row){
+                                    if($row['nama_prodi']!="Non-Teknik") 
                                     echo "<option value='$row[id_prodi]'>$row[nama_prodi]</option>";
                                     }
                                     ?>

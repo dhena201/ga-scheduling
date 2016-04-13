@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Ruang_model extends CI_Model {
 
 	var $table = 'ruang';
-    var $column = array('nama_ruang','kapasitas'); //set column field database for order and search
+    var $column = array('nama_ruang','kapasitas_ruang'); //set column field database for order and search
     var $order = array('nama_ruang' => 'desc'); // default order
 	public function __construct(){
 		parent::__construct();
@@ -16,7 +16,7 @@ class Ruang_model extends CI_Model {
      
         foreach ($this->column as $item) // loop column
         {
-            if($_POST['search']['value']) // if datatable send POST for search
+            if(isset($_POST['search']['value'])) // if datatable send POST for search
             {
                  
                 if($i===0) // first loop
@@ -48,7 +48,10 @@ class Ruang_model extends CI_Model {
     }
      
     function get_datatables(){
-    	$this->_get_datatables_query();   	
+    	$this->_get_datatables_query();
+        if(isset($_POST['length']) and $_POST['length']!= -1){
+            $this->db->limit($_POST['length'], $_POST['start']); 
+        }   	
         $query = $this->db->get();
         return $query->result_array();
     }
