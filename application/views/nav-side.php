@@ -65,25 +65,26 @@
             </a>
         </li>
         <!-- end KELAS LINK -->
-        <!-- begin JADWAL DROPDOWN -->
+        <!-- begin TABLES DROPDOWN -->
         <li class="panel">
             <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#tables">
-                <i class="fa fa-table"></i> Jadwal <i class="fa fa-caret-down"></i>
+                <i class="fa fa-table"></i> Tables <i class="fa fa-caret-down"></i>
             </a>
             <ul class="collapse nav" id="tables">
                 <li>
-                    <a href="<?php echo base_url('jadwal');?>">
-                        <i class="fa fa-angle-double-right"></i> Buat Jadwal
+                    <a href="basic-tables.html">
+                        <i class="fa fa-angle-double-right"></i> Basic Tables
                     </a>
                 </li>
                 <li>
-                    <a href="<?php echo base_url('jadwal');?>">
-                        <i class="fa fa-angle-double-right"></i> Lihat Jadwal
+                    <a href="advanced-tables.html">
+                        <i class="fa fa-angle-double-right"></i> Advanced Tables
                     </a>
                 </li>
             </ul>
         </li>
-        <!-- end JADWAL DROPDOWN -->
+        <!-- end TABLES DROPDOWN -->
+        <!-- begin UI ELEMENTS DROPDOWN -->
     </ul>
     <!-- /.side-nav -->
 </div>

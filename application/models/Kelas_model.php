@@ -4,12 +4,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Kelas_model extends CI_Model {
 
 	var $table = 'kelas';
-    var $column = array('nama_kuliah','nama_dosen','kelas','nama_prodi','kapasitas'); //set column field database for order and search
+    var $column = array('nama_kuliah','nama_prodi','nama_dosen'); //set column field database for order and search
     var $order = array('nama_prodi' => 'desc'); // default order
 	public function __construct(){
 		parent::__construct();
 	}
 
+	public function select_all(){
+		$sql = 'select kelas.id_kelas,kelas.kapasitas,mata_kuliah.nama_kuliah,prodi.nama_prodi,dosen.nama_dosen from kelas join mata_kuliah on kelas.id_kuliah = mata_kuliah.id_kuliah join prodi on mata_kuliah.id_prodi = prodi.id_prodi join dosen on kelas.id_dosen = dosen.id_dosen order by prodi.nama_prodi,mata_kuliah.nama_kuliah';
+		$data = $this->db->query($sql);
+		return $data->result_array();
+	}
 	private function _get_datatables_query(){
         $this->db->select('*');
         $this->db->from($this->table);
@@ -20,7 +25,7 @@ class Kelas_model extends CI_Model {
      
         foreach ($this->column as $item) // loop column
         {
-            if(isset($_POST['search']['value'])) // if datatable send POST for search
+            if($_POST['search']['value']) // if datatable send POST for search
             {
                  
                 if($i===0) // first loop
@@ -52,10 +57,7 @@ class Kelas_model extends CI_Model {
     }
      
     function get_datatables(){
-    	$this->_get_datatables_query();  
-        if(isset($_POST['length']) and $_POST['length']!= -1){
-            $this->db->limit($_POST['length'], $_POST['start']); 
-        }	
+    	$this->_get_datatables_query();   	
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -70,19 +72,12 @@ class Kelas_model extends CI_Model {
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }
-
-    function count_by_mk($id){
-        $this->_get_datatables_query();
-        $this->db->where('kelas.id_kuliah',$id);
-        $query = $this->db->get();
-        return $query->num_rows();
-    }
-
  
     public function get_by_id($id){
-        $this->_get_datatables_query();
+        $this->db->from($this->table);
         $this->db->where('id_kelas',$id);
         $query = $this->db->get();
+ 
         return $query->row();
     }
  

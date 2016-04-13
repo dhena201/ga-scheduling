@@ -55,4 +55,3 @@ $route['translate_uri_dashes'] = FALSE;
 $route['user_guide'] = 'index.php/user_guide';
 $route['mata-kuliah'] = 'mata_kuliah';
 $route['program-studi'] = 'program_studi';
-$route['jadwal'] = 'jadwal';

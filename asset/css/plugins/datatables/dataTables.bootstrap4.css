@@ -154,14 +154,6 @@ div.dataTables_scrollFoot table {
     text-align: center;
   }
 }
-@media screen and (max-width: 1100px) {
-  div.dataTables_wrapper div.dataTables_length,
-  div.dataTables_wrapper div.dataTables_filter,
-  div.dataTables_wrapper div.dataTables_info,
-  div.dataTables_wrapper div.dataTables_paginate {
-    text-align: center;
-  }
-}
 table.dataTable.table-condensed > thead > tr > th {
   padding-right: 20px;
 }

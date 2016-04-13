@@ -32,7 +32,6 @@ class Kelas extends CI_Controller {
             	"nama_kuliah" => $kelas['nama_kuliah'],
             	"nama_dosen" => $kelas['nama_dosen'],
             	"nama_prodi" => $kelas['nama_prodi'],
-                "kelas" => $kelas['kelas'],
             	"kapasitas" => $kelas['kapasitas']
             	);
 
@@ -63,7 +62,6 @@ class Kelas extends CI_Controller {
                 'id_kelas' => $this->input->post('id'),
                 'id_kuliah' => $this->input->post('id_kuliah'),
                 'id_dosen' => $this->input->post('id_dosen'),
-                'kelas' => $this->input->post('kelas'),
                 'kapasitas' => $this->input->post('kapasitas')
             );
         $insert = $this->kelas->save($data);
@@ -77,7 +75,6 @@ class Kelas extends CI_Controller {
                 'id_kelas' => $this->input->post('id'),
                 'id_kuliah' => $this->input->post('id_kuliah'),
                 'id_dosen' => $this->input->post('id_dosen'),
-                'kelas' => $this->input->post('kelas'),
                 'kapasitas' => $this->input->post('kapasitas')
             );
         $this->kelas->update($data);
@@ -90,24 +87,7 @@ class Kelas extends CI_Controller {
         echo json_encode(array("status" => TRUE));
     }
  
- 	public function ajax_get_mk($id){
-        $this->load->model('Mata_kuliah_model','matkul',TRUE);
- 		$data=$this->matkul->get_by_prodi($id);
- 		$this->output->set_content_type("application/json")->set_output(json_encode($data));
- 	}
-
-    public function ajax_get_dosen($id){
-        $this->load->model('Dosen_model','dosen',TRUE);
-        $data=$this->dosen->get_by_prodi($id);
-        $this->output->set_content_type("application/json")->set_output(json_encode($data));
-    }
-    public function ajax_get_kelas($id){
-        $char = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        $index=$this->kelas->count_by_mk($id);
-        $data = $char[$index];
-        $this->output->set_content_type("application/json")->set_output(json_encode($data));
-    }
-
+ 
     private function _validate()
     {
         $data = array();
