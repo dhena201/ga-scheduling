@@ -14,19 +14,17 @@
             <button class="btn btn-success" onclick="add_data()"><i class="fa fa-plus"></i> Tambah</button>
             <br/>
             <br/>
-            <div class="table-responsive">
-                <table id="table" class="table table-striped table-bordered table-hover table-green">
-                    <thead>
-                        <tr>
-                            <th>Nama Ruangan</th>
-                            <th>Kapasitas</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+            <table id="table" class="table table-striped table-bordered table-hover table-green" width="100%">
+                <thead>
+                    <tr>
+                        <th>Nama Ruangan</th>
+                        <th>Kapasitas Ruangan</th>
+                        <th style="width:110px;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
     <!-- /.portlet -->
@@ -55,7 +53,7 @@ $(document).ready(function() {
             {"data" : "nama_ruang"},
             {"data" : "kapasitas"},
             {"data":"id_ruang",render:function(data){
-                var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_data("+data+")'><i class='fa fa-trash-o'></i></a>";
+                var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_data("+data+")'><i class='fa fa-trash-o'></i></a>";
                 return btn;
             }
             }
@@ -207,7 +205,7 @@ function delete_data(id)
  
 </script>
 <!-- Bootstrap modal -->
-<div class="modal fade" id="modal_form" role="dialog">
+<div class="modal modal-flex fade" id="modal_form" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
