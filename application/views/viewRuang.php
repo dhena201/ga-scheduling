@@ -113,7 +113,7 @@ function edit_data(id)
  
             $('[name="id"]').val(data.id_ruang);
             $('[name="nama_ruang"]').val(data.nama_ruang);
-            $('[name="kapasitas"]').val(data.kapasitas);
+            $('[name="kapasitas"]').val(data.kapasitas_ruang);
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Ubah Data'); // Set title to Bootstrap modal title
  
@@ -226,7 +226,7 @@ function delete_data(id)
                         <div class="form-group">
                             <label class="control-label col-md-3">Kapasitas Ruangan</label>
                             <div class="col-md-9">
-                                <input name="kapasitas" type="number" class="form-control" min="0">
+                                <input name="kapasitas" placeholder="Kapasitas Ruangan" type="number" class="form-control" min="0">
                                 <span class="help-block"></span>
                             </div>
                         </div>

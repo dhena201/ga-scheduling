@@ -188,6 +188,10 @@ function add_data()
 function edit_data(id)
 {
     save_method = 'update';
+    $("#mk > option").remove();
+    $("#mk").append("<option value=''>--Pilih Mata Kuliah--</option>");
+    $("#dosen > option").remove();
+    $("#dosen").append("<option value=''>--Pilih Dosen Pengampu--</option>");
     $('#form')[0].reset(); // reset form on modals
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
@@ -366,7 +370,7 @@ function delete_data(id)
                     <div class="form-group">
                         <label class="control-label col-md-3">Kapasitas Kelas</label>
                         <div class="col-md-9">
-                            <input name="kapasitas" type="number" class="form-control" min="0" value="0">
+                            <input name="kapasitas" placeholder="Kapasitas Kelas" type="number" class="form-control" min="0">
                             <span class="help-block"></span>
                         </div>
                     </div>

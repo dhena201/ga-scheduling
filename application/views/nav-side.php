@@ -72,7 +72,7 @@
             </a>
             <ul class="collapse nav" id="tables">
                 <li>
-                    <a href="<?php echo base_url('jadwal');?>">
+                    <a href="<?php echo base_url('buat-jadwal');?>">
                         <i class="fa fa-angle-double-right"></i> Buat Jadwal
                     </a>
                 </li>
