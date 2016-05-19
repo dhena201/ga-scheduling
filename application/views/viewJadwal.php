@@ -11,17 +11,22 @@
                 <div class="clearfix"></div>
             </div>
             <div class="portlet-body">
-                <label>Tahun Ajaran</label>
-                <select id="thn_ajar">
-                    <option value="0">--Pilih Tahun Ajaran--</option>
-                    <?php
-                        foreach ($thn_ajar as $row) {
-                             echo "<option value='$row[thn_ajar]'>$row[thn_ajar]</option>";
-                         } 
-                    ?>
-                </select>
-                <br/>
-                <br/>
+                <div class="row form">
+                <div class="form-group">
+                    <label class="control-label col-md-12">Pilih Tahun Ajar</label>
+                    <div class="col-md-3">
+                        <select name="thn" id="thn_ajar" class="form-control">
+                            <option value="0">--Pilih Tahun Ajaran--</option>
+                            <?php
+                                foreach ($thn_ajar as $row) {
+                                     echo "<option value='$row[thn_ajar]'>$row[thn_ajar]</option>";
+                                 } 
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                </div>
+                <br>
                 <table id="example-table" class="table table-striped table-bordered table-hover table-green" width="100%">
                     <thead>
                         <tr>

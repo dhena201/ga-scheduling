@@ -81,16 +81,20 @@ class GA extends MY_Controller{
     public function saveTmp($fittest,$thnajar){
 		$hariall = array('Senin','Selasa','Rabu','Kamis','Jumat');
     	$this->jadwal->delTmp();
+    	$row = array();
     	for($i=0;$i<count(Fitness::$kelas);$i++){
     		$data = array(
+    			'id_jadwal' => '',
                 'thn_ajar' => $thnajar,
                 'id_kelas' => Fitness::$kelas[$i]['id_kelas'],
                 'id_ruang' => $fittest->getGene1($i)['id_ruang'],
                 'hari' => $hariall[$fittest->getGene3($i)],
                 'jam' => $this->convertTime($fittest->getGene2($i))
             );
-            $this->jadwal->saveTmp($data);	
+            $row [] = $data;
+            	
     	}
+    	$this->jadwal->saveTmp($row);
 
     }
     public function evolve($thnajar){
@@ -118,22 +122,18 @@ class GA extends MY_Controller{
 		while ($myPop->getFittest()->getFitness() > Fitness::getMaxFitness()){
 			$response['stagnant']=0;
 			$generationCount++;
+			$response['update'] = false;
 			$most_fit=$myPop->getFittest()->getFitness();          
 				$myPop = algorithm::evolvePopulation($myPop); //create a new generation
 				if ($most_fit < $most_fit_last){
 				// echo " *** MOST FIT ".$most_fit." Most fit last".$most_fit_last;
+					$response['update'] = true;
 					$response['generation'] =$generationCount;
 				 	$response['stagnant']=$generation_stagnant;
 				 	$response['best_fittest_value']=$most_fit;
 				 	$most_fit_last=$most_fit;
 				 	$generation_stagnant=0; //reset stagnant generation counter
-				 	for($i=0;$i<count(Fitness::$kelas);$i++){
-					 	$response['gen3'][$i] = $hariall[$myPop->getFittest()->getGene3($i)];
-					 	$response['gen2'][$i] = $this->convertTime($myPop->getFittest()->getGene2($i));
-					 	$response['gen1'][$i] = $myPop->getFittest()->getGene1($i)['nama_ruang'];
-					 	$response['stat'][$i] = $myPop->getFittest()->getStatus($i);				 	
-					}
-					// $this->saveTmp($myPop->getFittest(),$thnajar); 
+					$this->saveTmp($myPop->getFittest(),$thnajar); 
 					$time2 = microtime(true);
 					$response['elapsed'] = round($time2-$time1,2)."s";
 					$response['message'] = '<strong>PHP Server Working...</strong>';
@@ -163,12 +163,7 @@ class GA extends MY_Controller{
 		$time2 = microtime(true);
 		$response['generation'] =$generationCount;
 		$response['best_fittest_value']=Fitness::getFitness($myPop->getFittest());
-		for($i=0;$i<count(Fitness::$kelas);$i++){
-		 	$response['gen3'][$i] = $hariall[$myPop->getFittest()->getGene3($i)];
-		 	$response['gen2'][$i] = $this->convertTime($myPop->getFittest()->getGene2($i));
-		 	$response['gen1'][$i] = $myPop->getFittest()->getGene1($i)['nama_ruang'];
-		 	$response['stat'][$i] = $myPop->getFittest()->getStatus($i);
-		} 
+		$response['update'] = true;
 		$response['elapsed'] = round($time2-$time1,2)."s";
 		$response['message'].="<strong><font color='green'>Selesai!</font></strong>, Algoritma Genetika telah selesai untuk solusi ini";
 		$response['done']=true;

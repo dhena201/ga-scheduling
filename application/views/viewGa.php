@@ -10,53 +10,73 @@
                 <div class="clearfix"></div>
             </div>
             <div class="portlet-body">
-                <label>Tahun Ajaran</label>
-                <select id="thn_ajar" name="thnajar">
-                    <option value="">--Pilih Tahun Ajaran--</option>
-                    <?php
-                        foreach ($thn_ajar as $row) {
-                             echo "<option value='$row[thn_ajar]'>$row[thn_ajar]</option>";
-                         } 
-                    ?>
-                </select>
-                <form id="form1" >
-                KLik Untuk Memulai Pembuatan Jadwal : <button id="btnRun" class="btn btn-success">Run GA</button>
-                <br/>
-                <label>Generasi :</label> <span id="generation"  class="med_text">0</span>
-                (stagnant : <span id="stagnant"  class="med_text">0</span> )
-                <label>NIlai Fitness :</label> <span id="best_fittest_value"  class="med_text">0</span>
-                <label>Waktu Proses :</label> <span id="elapsed"  class="med_text">0</span>
-                <br/>
-                <span id="message"> </span>
-                <br/>
+                <div class="row form">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <select name="thn" id="thn_ajar" class="form-control">
+                                <option value="">--Pilih Tahun Ajaran--</option>
+                                <?php
+                                    $thn = intval("20".date('y'));
+                                    for($i=0;$i<10;$i++){
+                                      $thnini = intval($thn)+$i;
+                                      $thnnex = intval($thnini)+1;
+                                      $thnajar = $thnini.$thnnex;
+                                      for($j=1;$j<=2;$j++){
+                                        $thnajaran = $thnajar.$j;
+                                        echo "<option value='$thnajaran'>$thnajaran</option>";
+                                      }
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                        <span class="help-block"></span>
+                        <div class="col-md-6">
+                            <button id="btnRun" class="btn btn-success">Buat Jadwal</button>&nbsp&nbsp
+                            <button id="btnSave" class="btn btn-success">Simpan Jadwal</button>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="col-md-12" id="GA_stat">
+                        <label>Generasi :</label> <span id="generation"  class="med_text">0</span>
+                        (stagnant : <span id="stagnant"  class="med_text">0</span> )
+                        <label>NIlai Fitness Terbaik:</label> <span id="best_fittest_value"  class="med_text">0</span>
+                        <label>Waktu Proses :</label> <span id="elapsed"  class="med_text">0</span>
+                        <br/>
+                        <span id="message"> </span>
+                    </div>
+                </div>
+                
                 <br/>
                 <table id="example-table" class="table table-striped table-bordered table-hover table-green" width="100%">
                     <thead>
                         <tr>
                             <th>Mata Kuliah</th>
                             <th>Dosen</th>
+                            <th>Program Studi</th>
+                            <th>Kelas</th>
+                            <th>Kapasitas</th>
                             <th>Ruang</th>
                             <th>Hari</th>
                             <th>Jam</th>
-                            <th>Status</th>
-                            <!-- <th style="width:110px;">Aksi</th> -->
+                            <th style="width:60px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                     <?php
-                      $i=0;
-                      foreach ($datakelas as $datakelas) {
-                        echo "<tr>
-                        <td>$datakelas[nama_kuliah]</td>
-                        <td>$datakelas[nama_dosen]</td>
-                        <td><span id='r$i'> </span></td>
-                        <td><span id='h$i'> </span></td>
-                        <td><span id='j$i'> </span></td>
-                        <td><span id='s$i'> </span></td>
-                        </tr>";
-                        $i++;
-                      }
-                    ?>
+                     <!--<?php
+                      // $i=0;
+                      // foreach ($datakelas as $datakelas) {
+                      //   echo "<tr>
+                      //   <td>$datakelas[nama_kuliah]</td>
+                      //   <td>$datakelas[nama_dosen]</td>
+                      //   <td><span id='r$i'> </span></td>
+                      //   <td><span id='h$i'> </span></td>
+                      //   <td><span id='j$i'> </span></td>
+                      //   <td><span id='s$i'> </span></td>
+                      //   </tr>";
+                      //   $i++;
+                      // }
+                    ?>-->
                     </tbody>
                 </table>
             </div>
@@ -68,15 +88,22 @@
 <script type="text/javascript">
 var save_method; //for save method string
 var table;
-$(document).ready(function() {
-    
+$(document).ready(function() { 
+    ajax_list();
     console.log("document.ready");
+    $('#GA_stat').hide();
+    $('#btnSave').attr('disabled',true);
     // When any <submit > button  is clicked 
     $('#btnRun').click( function() {
+      $('#btnSave').attr('disabled',true);
+      if(table){
+        table.destroy();
+      }
       var thnajar = $('#thn_ajar').val();
       console.log(thnajar);
       if(thnajar){
-        // ajax_list(thnajar);
+        ajax_list(thnajar);
+        $('#GA_stat').show();
         $('#btnRun').text('Running..');
         $('#btnRun').attr('disabled',true);
         run_server_ga(thnajar); //lets go to the server and look for this string
@@ -86,8 +113,16 @@ $(document).ready(function() {
         return false;
       }
       
-    }); //end of event handler
- 
+    }); 
+
+    $('#btnSave').click( function(){
+      var thnajar = $('#thn_ajar').val();
+      savetmp(thnajar);
+    });
+
+
+    //end of event handler
+
     // //set input/textarea/select event when change value, remove class error and remove text help block
     // $("input").change(function(){
     //     $(this).parent().parent().removeClass('has-error');
@@ -111,10 +146,11 @@ function run_server_ga(thnajar){
   if (!!window.EventSource) {
  
   var source = new EventSource("<?php echo base_url('GA/evolve/');?>/"+thnajar);
+  reload_table();
   source.addEventListener('update', function(e)
   {
     // console.log("Receiving JSON server side events");
-    // reload_table();
+    reload_table();
     var data = JSON.parse(e.data);
     $('#best_individual').html(data.best_individual); // Clear various <spans>
     $('#best_fittest_value').text(data.best_fittest_value); //
@@ -123,18 +159,13 @@ function run_server_ga(thnajar){
     $('#max_fitness').text(data.max_fitness);
     $('#message').html(data.message);
     $('#elapsed').text(data.elapsed);
-    for (var i = 0; i < 18; i++) {
-      $('#h'+i).text(data.gen3[i]);
-      $('#j'+i).text(data.gen2[i]);
-      $('#r'+i).text(data.gen1[i]);
-      $('#s'+i).text(data.stat[i]);
-    };      
     if (data.done==true){
-      $('#btnRun').text('Run GA');
-      $('#btnRun').attr('disabled',false);
+      $('#btnSave').attr('disabled',false);
+      $('#btnRun').text('Buat Jadwal');
+      $('#btnRun').attr('disabled',true);
       source.close();
+      reload_table();
     }
-      
     
   }, false);
 
@@ -149,42 +180,41 @@ function run_server_ga(thnajar){
 
 }
 
-function ajax_list(thnajar){ 
-    var table   
+function ajax_list(thnajar){
+     
     table = $('#example-table').DataTable({
-    "processing": true, //Feature control the processing indicator.
-    "serverSide": true, //Feature control DataTables' server-side processing mode.
-    "order": [], //Initial no order.
+      "processing": true, //Feature control the processing indicator.
+      "serverSide": true, //Feature control DataTables' server-side processing mode.
+      "order": [], //Initial no order.
 
-    // Load data for the table's content from an Ajax source
-    "ajax": {
-        "url": "<?php echo base_url('jadwal/ajax_list')?>/"+thnajar,
-        "type": "POST"
-    },
-    "columns" :[
-        {"data" : "nama_kuliah"},
-        {"data" : "nama_dosen"},
-        {"data" : "nama_prodi"},
-        {"data" : "kelas"},
-        {"data" : "kapasitas"},
-        {"data" : "nama_ruang"},
-        {"data" : "hari"},
-        {"data" : "jam"},
-        {"data":"id_jadwal",render:function(data){
-            var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_data("+data+")'><i class='fa fa-trash-o'></i></a>";
-            return btn;
-        }}
-    ],
-    //Set column definition initialisation properties.
-    "columnDefs": [
-    {
-        "targets": [ -1 ], //last column
-        "orderable": false, //set not orderable
-    },
-    ],
+      // Load data for the table's content from an Ajax source
+      "ajax": {
+          "url": "<?php echo base_url('jadwal/ajax_listtmp')?>/"+thnajar,
+          "type": "POST"
+      },
+      "columns" :[
+          {"data" : "nama_kuliah"},
+          {"data" : "nama_dosen"},
+          {"data" : "nama_prodi"},
+          {"data" : "kelas"},
+          {"data" : "kapasitas"},
+          {"data" : "nama_ruang"},
+          {"data" : "hari"},
+          {"data" : "jam"},
+          {"data":"id_jadwal",render:function(data){
+              var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>";
+              return btn;
+          }}
+      ],
+      //Set column definition initialisation properties.
+      "columnDefs": [
+      {
+          "targets": [ -1 ], //last column
+          "orderable": false, //set not orderable
+      },
+      ],
 
     });  
-    return false;          
 }
 
 function add_data()
@@ -280,29 +310,35 @@ function save()
         }
     });
 }
- 
-function delete_data(id)
+function savetmp(thnajar)
 {
-    if(confirm('Apakah Anda Yakin Menghapus Data Ini?'))
-    {
-        // ajax delete data to database
-        $.ajax({
-            url : "<?php echo base_url('jadwal/ajax_delete')?>/"+id,
-            type: "POST",
-            dataType: "JSON",
-            success: function(data)
-            {
-                //if success reload ajax table
-                $('#modal_form').modal('hide');
-                reload_table();
-            },
-            error: function (jqXHR, textStatus, errorThrown)
-            {
-                alert('Error deleting data');
-            }
-        });
+    $('#btnSave').text('Menyimpan...'); //change button text
+    $('#btnSave').attr('disabled',true); //set button disable
+    // ajax adding data to database
+    $.ajax({
+        url : "<?php echo base_url('jadwal/ajax_savetmp/')?>/"+thnajar,
+        type: "POST",
+        data: $('#form').serialize(),
+        dataType: "JSON",
+        success: function(data)
+        {
  
-    }
+            $('#btnSave').text('Simpan Jadwal'); //change button text
+            $('#btnSave').attr('disabled',true); //set button enable
+            console.log(data.status);
+            alert("Berhasil Menyimpan Jadwal");
+
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+            alert('Error adding / update data');
+            $('#btnSave').text('save'); //change button text
+            $('#btnSave').attr('disabled',false); //set button enable
+ 
+        }
+    });
 }
+ 
+
  
 </script>
