@@ -69,7 +69,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="logout_open" href="#logout">
+                    <a class="logout_open" href="<?php echo base_url('auth/logout');?>">
                         <i class="fa fa-sign-out"></i> Logout
                         <strong>Administrator</strong>
                     </a>

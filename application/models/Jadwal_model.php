@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Jadwal_model extends CI_Model {
 
 	var $table = 'jadwal';
+    var $tmp = 'tmp_jadwal';
     var $column = array('nama_kuliah','nama_dosen','nama_prodi','kelas','kapasitas','nama_ruang','hari','jam'); //set column field database for order and search
     var $order = array('nama_prodi' => 'desc'); // default order
 	public function __construct(){
@@ -74,7 +75,11 @@ class Jadwal_model extends CI_Model {
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }
- 
+    public function count(){
+        $this->db->from($this->table)->select('thn_ajar');
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
     public function get_by_id($id){
         $this->_get_datatables_query();
         $this->db->where('id_jadwal',$id);
@@ -93,6 +98,13 @@ class Jadwal_model extends CI_Model {
     public function save($data){
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
+    }
+    public function saveTmp($data){
+        $this->db->insert($this->tmp, $data);
+        return $this->db->insert_id();
+    }
+    public function delTmp(){
+        $this->db->query('delete from tmp_jadwal');
     }
  
     public function update($data){

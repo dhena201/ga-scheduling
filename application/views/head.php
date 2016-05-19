@@ -3,7 +3,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Flex Admin</title>
+    <title>SPKO</title>
 
     <!-- PACE LOAD BAR PLUGIN - This creates the subtle load bar effect at the top of the page. -->
     <link href="<?php echo base_url('asset/css/plugins/pace/pace.css'); ?>" rel="stylesheet">

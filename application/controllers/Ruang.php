@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Ruang extends CI_Controller {
+class Ruang extends MY_Controller {
 
 	public $data = array(
 		'breadcrumb' => 'Ruang',
@@ -55,7 +55,7 @@ class Ruang extends CI_Controller {
     {
         $this->_validate();
         $data = array(
-                'kapasitas' => $this->input->post('kapasitas'),
+                'kapasitas_ruang' => $this->input->post('kapasitas'),
                 'nama_ruang' => $this->input->post('nama_ruang'),
             );
         $insert = $this->ruang->save($data);
@@ -67,7 +67,7 @@ class Ruang extends CI_Controller {
         $this->_validate();
         $data = array(
                 'id_ruang' => $this->input->post('id'),
-                'kapasitas' => $this->input->post('kapasitas'),
+                'kapasitas_ruang' => $this->input->post('kapasitas'),
                 'nama_ruang' => $this->input->post('nama_ruang'),
             );
         $this->ruang->update($data);
@@ -83,11 +83,15 @@ class Ruang extends CI_Controller {
  
     private function _validate()
     {
-        $data = array();
+
         $data['error_string'] = array();
         $data['inputerror'] = array();
         $data['status'] = TRUE;
- 
+        if($ruang = $this->ruang->get_by_name($this->input->post('nama_ruang'))){
+            $data['inputerror'][] = 'nama_ruang';
+            $data['error_string'][] = 'Ruangan Dengan Nama Diatas Sudah Ada';
+            $data['status'] = FALSE;
+        }
         if($this->input->post('nama_ruang') == '')
         {
             $data['inputerror'][] = 'nama_ruang';

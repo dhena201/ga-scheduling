@@ -8,21 +8,12 @@
             </p>
             <p class="name tooltip-sidebar-logout">
                 
-                <span class="last-name">Administrator</span> <a style="color: inherit" class="logout_open" href="#logout" data-toggle="tooltip" data-placement="top" title="Logout"><i class="fa fa-sign-out"></i></a>
+                <span class="last-name"><?php echo $this->session->userdata('identity');?></span> <a style="color: inherit" class="logout_open" href="#logout" data-toggle="tooltip" data-placement="top" title="Logout"><i class="fa fa-sign-out"></i></a>
             </p>
             <div class="clearfix"></div>
         </li>
         <!-- end SIDE NAV USER PANEL -->
-        <!-- begin SIDE NAV SEARCH -->
-        <li class="nav-search">
-            <form role="form">
-                <input type="search" class="form-control" placeholder="Search...">
-                <button class="btn">
-                    <i class="fa fa-search"></i>
-                </button>
-            </form>
-        </li>
-        <!-- end SIDE NAV SEARCH -->
+        
         <!-- begin DASHBOARD LINK -->
         <li>
             <a class="active" href="<?php echo base_url(); ?>">
@@ -30,6 +21,13 @@
             </a>
         </li>
         <!-- end DASHBOARD LINK -->
+        <!-- begin USER DROPDOWN -->
+        <li>
+            <a href="<?php echo base_url('auth'); ?>">
+                <i class="fa fa-user"></i> User
+            </a>
+        </li>
+        <!-- end USER LINK -->
         <!-- begin DOSEN DROPDOWN -->
         <li>
             <a href="<?php echo base_url('dosen'); ?>">

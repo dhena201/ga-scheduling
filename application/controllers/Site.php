@@ -20,12 +20,29 @@ class Site extends CI_Controller {
 	 */
 	public function __construct(){
 		parent::__construct();
+		$this->load->model('Dosen_model','dosen',TRUE);
+		$this->load->model('Prodi_model','prodi',TRUE);
+		$this->load->model('Mata_kuliah_model','matkul',TRUE);
+		$this->load->model('Ruang_model','ruang',TRUE);
+		$this->load->model('Kelas_model','kelas',TRUE);
+		$this->load->model('Jadwal_model','jadwal',TRUE);
+		if (!$this->ion_auth->logged_in())
+		{
+			// redirect them to the login page
+			redirect('auth/login', 'refresh');
+		}
 	}
 
 	public function index(){
-		$this->data['breadcrumb'] = 'Blank';
-		$this->data['subtitle'] = 'For Customization';
-		$this->data['main_view'] = 'content';
+		$this->data['breadcrumb'] = 'Dashboard';
+		$this->data['subtitle'] = '';
+		$this->data['main_view'] = 'dashboard';
+		$this->data['count_dosen'] = $this->dosen->count_all();
+		$this->data['count_matkul'] = $this->matkul->count_all();
+		$this->data['count_prodi'] = $this->prodi->count_all();
+		$this->data['count_ruang'] = $this->ruang->count_all();
+		$this->data['count_kelas'] = $this->kelas->count_all();
+		$this->data['count_jadwal'] = $this->jadwal->count();
 		$this->load->view('template',$this->data);
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Program_studi extends CI_Controller {
+class Program_studi extends MY_Controller {
 
 	public $data = array(
 		'breadcrumb' => 'Program Studi',
@@ -78,10 +78,15 @@ class Program_studi extends CI_Controller {
  
     private function _validate()
     {
-        $data = array();
         $data['error_string'] = array();
         $data['inputerror'] = array();
         $data['status'] = TRUE;
+
+        if($prodi = $this->prodi->get_by_name($this->input->post('nama_prodi'))){
+            $data['inputerror'][] = 'nama_prodi';
+            $data['error_string'][] = 'Program Studi Diatas Sudah Ada';
+            $data['status'] = FALSE;
+        }
  
         if($this->input->post('nama_prodi') == '')
         {

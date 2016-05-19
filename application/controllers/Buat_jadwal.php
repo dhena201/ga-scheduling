@@ -2,10 +2,10 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once('Individual.php');  //supporting individual 
 require_once('Population.php');  //supporting population 
-require_once('Fitness.php');  //supporting fitnesscalc 
+require_once('Fitness.php');    //supporting fitnesscalc 
 require_once('Algorithm.php');  //supporting fitnesscalc 
 
-class Buat_jadwal extends CI_Controller {
+class Buat_jadwal extends MY_Controller {
 
 	public $data = array(
 		'breadcrumb' => 'Buat Jadwal',

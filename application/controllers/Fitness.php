@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once('Buat_jadwal.php');
-class Fitness extends CI_Controller {
+class Fitness extends MY_Controller {
     public function __construct(){
         parent::__construct();
         $this->load->model('Fitness_model','fitness',TRUE);
@@ -21,55 +21,97 @@ class Fitness extends CI_Controller {
     public static function  getFitness($individual) {
         $fitness = 0;
         $sol_count=count(Fitness::$kelas);  /* get array size */
-        $aa = false;
+        $conflict = false;
         // Loop through our individuals genes and compare them to our candidates
-        for ($i=0; $i < $sol_count-1; $i++ )
-        {
+        for ($i=0; $i <= $sol_count-1; $i++ )
+        {   $jj = (Fitness::$kelas[$i]['kapasitas'] >= $individual->getGene1($i)['kapasitas']); // cek kapasitas ruangan
+            $conflict = false;
+            $w = array();
             for ($j=$i+1; $j < $sol_count; $j++) {
-                // cek untuk kelas dengan prodi yang sama
-                $aa = (Fitness::$kelas[$i]['id_prodi'] == Fitness::$kelas[$j]['id_prodi']);   //cek prodi sama
+                $aa = ($individual->getGene3($i) == $individual->getGene3($j));                 //cek hari sama
                 $bb = ($individual->getGene2($i) == $individual->getGene2($j));                 //cek jam sama
-                $cc = ($individual->getGene3($i) == $individual->getGene3($j));                 //cek hari sama
+                $cc = (Fitness::$kelas[$i]['id_prodi'] == Fitness::$kelas[$j]['id_prodi']);     //cek prodi sama
                 $dd = ($individual->getGene1($i)['id_ruang'] == $individual->getGene1($j)['id_ruang']);         //cek ruang sama
                 $ee = ($individual->getGene2($i) > $individual->getGene2($j) and $individual->getGene2($i) < $individual->waktuhabis[$j]); //cek irisan 1
                 $ff = ($individual->getGene2($j) > $individual->getGene2($i) and $individual->getGene2($j) < $individual->waktuhabis[$i]); //cek irisan 2
                 $gg = (Fitness::$kelas[$i]['id_dosen'] == Fitness::$kelas[$j]['id_dosen']);         //cek dosen sama
-                $hh = (Fitness::$kelas[$i]['semester'] == Fitness::$kelas[$j]['semester']);   //cek semester
+                $hh = (Fitness::$kelas[$i]['semester'] == Fitness::$kelas[$j]['semester']);         //cek semester
+                $ii = (Fitness::$kelas[$i]['id_kuliah'] == Fitness::$kelas[$j]['id_kuliah']); //cek mata kuliah yang sama
 
-                if ($aa and $cc) { //untuk kelas di hari yang sama dan prodi yang sama
-                    if($bb and $hh){ // bentrok jam dan mk semester yg sama
-                        $fitness+=30;
-                        //echo "*1 +30 ";
+                if ($aa) { //untuk kelas di hari yang sama
+                    if($cc){ //untuk prodi yang sama
+                        if($bb and !$ii){ //untuk jam yang sama
+                            if($hh){// bentrok jam dan mk semester yg sama
+                                $fitness+=30;
+                                $conflict = true;
+                            }
+                            if($gg){//bentrok dosen di jam yang sama
+                                $fitness+=30;
+                                $conflict = true;
+                            }
+                            if($dd){//bentrok ruangan di jam yg sama
+                                $fitness+=30;
+                                $conflict = true;
+                            }
+                            if(!$hh){//bentrok jam mk semester berbeda
+                                $fitness+=10;
+                                $conflict = true;
+                            }
+                        }
+                        if(($ee or $ff) and !$ii){  //irisan waktu
+                            if($hh){//irisan waktu mk semester yang sama
+                                $fitness+=22;
+                                $conflict = true;
+                            }
+                            if($gg){// irisan waktu dosen yg sama
+                                $fitness+=20;
+                                $conflict = true;
+                            }
+                            if($dd){// irisan waktu ruangan yg sama
+                                $fitness+=30;
+                                $conflict = true;
+                            }
+                            if(!$hh){// irisan mk semester berbeda
+                                $fitness+=5;
+                                $conflict = true;
+                            }
+                        }
                     }
-                    if($bb and $gg){ //bentrok dosen
-                        $fitness+=30;
-                        //echo "*2 +30 ";
-                    }
-                    if($hh and ($ee or $ff)){ //beririsan mk semester yg sama
-                        $fitness+=20;
-                        //echo "*3 +20 ";
-                    }
-                    if($bb and !$hh){ // bentrok mk prodi yg sama beda semester di jam yg sama
-                        $fitness+=10;
-                        //echo "*4 +10 ";
-                    }
-                    if($ee or $ff){ //beririsan mk prodi yg sama
-                        $fitness+=5;
-                        //echo "*5 +5 ";
-                    }
-                }else if($cc and !$aa){ //untuk kelas di hari yang sama berbeda prodi
-                    if($bb and $cc){ //bentrok ruangan di jam yg sama
-                        $fitness+=20;
-                        //echo "bentrok ruang ";
-                    }
-                    if($cc and ($ee or $ff)){ // irisan ruangan
-                        $fitness+=20;
-                        //echo "irisan ruang ";
+                    else if(!$cc){// beda prodi
+                        if($bb){ //untuk jam yang sama
+                            if($gg){//bentrok dosen di jam yang sama
+                                $fitness+=30;
+                                $conflict = true;
+                            }
+                            if($dd){//bentrok ruangan di jam yg sama
+                                $fitness+=30;
+                                $conflict = true;
+                            }
+                        }
+                        else if($ee or $ff){  //irisan waktu
+                            if($gg){// irisan waktu dosen yg sama
+                                $fitness+=20;
+                                $conflict = true;
+                            }
+                            if($dd){// irisan waktu ruangan yg sama
+                                $fitness+=30;
+                                $conflict = true;
+                            }
+                        }
                     }
                 }
             }
+            if($jj){//kapasitas ruangan kurang dari kapasitas kelas
+                    $fitness+=15;
+                    $conflict =true;
+            }
+            if($conflict == true){
+                $individual->status[$i] = "conflict";
+            }else{
+                $individual->status[$i] = "pass";
+            }
+            
         }
-        
         //echo "Fitness: $fitness";
         return $fitness;  //inverse of cost function
         

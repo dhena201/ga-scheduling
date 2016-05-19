@@ -74,6 +74,12 @@ class Ruang_model extends CI_Model {
  
         return $query->row();
     }
+    public function get_by_name($name){
+        $this->db->from($this->table);
+        $this->db->where('nama_ruang',$name);
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
  
     public function save($data){
         $this->db->insert($this->table, $data);

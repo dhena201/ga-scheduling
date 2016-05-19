@@ -12,8 +12,8 @@ require_once('Fitness.php');  //supporting class file
 class algorithm {
 
     /* GA parameters */
-  public static $uniformRate=0.5;  /* crosssover determine what where to break gene string */
-  public static $mutationRate=0.05; /* When choosing which genes to mutate what rate of random values are mutated */
+  public static $uniformRate=0.4;  /* crosssover determine what where to break gene string */
+  public static $mutationRate=0.1; /* When choosing which genes to mutate what rate of random values are mutated */
   public static $poolSize=15;  /* When selecting for crossover how large each pool should be */
   public static $max_generation_stagnant=200;  /*how many unchanged generations before we end */
   public static $elitism=true;
@@ -26,19 +26,15 @@ class algorithm {
 }
 	
     public static function evolvePopulation( $pop) {
-       $newPopulation = new population($pop->size(), false);
-
+        $newPopulation = new population($pop->size(), false);
+        $elitismOffset=0;
 	  
         // Keep our best individual
         if (algorithm::$elitism) {
             $newPopulation->saveIndividual(0, $pop->getFittest());
-	    }
-
-        // Crossover population
-        $elitismOffset=0;
-        if (algorithm::$elitism) {
             $elitismOffset = 1;
-        } else {
+	    }
+        else{
             $elitismOffset = 0;
         }
 		
@@ -46,20 +42,25 @@ class algorithm {
         // crossover
 	
         for ($i = $elitismOffset; $i < $pop->size(); $i++) 
-		{	 
+		{
             $indiv1 = algorithm::poolSelection($pop);
             $indiv2 = algorithm::poolSelection($pop);
-            $newIndiv =  algorithm::crossover($indiv1, $indiv2);
-            $newPopulation->saveIndividual($i, $newIndiv);
+            if(algorithm::random() <= algorithm::$uniformRate){    
+                $newIndiv =  algorithm::crossover($indiv1, $indiv2);
+                $newPopulation->saveIndividual($i, $newIndiv);    
+            }else{
+                $newPopulation->saveIndividual($i,$indiv1);
+            }	 
+            
         }
 
         // Mutate population
-	
-        for ($i=$elitismOffset; $i < $newPopulation->size(); $i++) {
-            algorithm::mutate($newPopulation->getIndividual($i));
+	    $count_mutate = intval(algorithm::$mutationRate*($pop->size())*count(FItness::$kelas));
+        for ($i=0; $i < $count_mutate; $i++) {
+            $rando = rand($elitismOffset,$pop->size()-1);
+            algorithm::mutate($newPopulation->getIndividual($rando));
         }
 
-	
         return $newPopulation;
     }
 
@@ -82,23 +83,18 @@ class algorithm {
 
     // Mutate an individual
     private static function mutate( $indiv) {
-        // Loop through genes
-        for ($i=0; $i < $indiv->size(); $i++) {
-            if (  algorithm::random() <= algorithm::$mutationRate) {
-                $random = rand(1,3);
-                if($random==1){
-                    $gene = Fitness::$ruang[rand(0, count(Fitness::$ruang) - 1)];    // Create random gene
-                    $indiv->setGene1($i, $gene); //substitute the gene into the individual
-                }
-                if($random==2){
-                    $gene = rand(0,(10 - (Fitness::$kelas[$i]['sks']))) ;    // Create random gene
-                    $indiv->setGene2($i, $gene); //substitute the gene into the individual
-                }
-                if($random==3){
-                    $gene = rand(0,4);    // Create random gene
-                    $indiv->setGene3($i, $gene); //substitute the gene into the individual
-                }
-            }
+        $randomGen = rand(0,count(Fitness::$kelas)-1);
+        if(rand(0,1)==1){
+            $gene = Fitness::$ruang[rand(0, count(Fitness::$ruang) - 1)];    // Create random gene
+            $indiv->setGene1($randomGen, $gene); //substitute the gene into the individual
+        }
+        if(rand(0,1)==1){
+            $gene = rand(0,(10 - (Fitness::$kelas[$randomGen]['sks']))) ;    // Create random gene
+            $indiv->setGene2($randomGen, $gene); //substitute the gene into the individual
+        }
+        if(rand(0,1)==1){
+            $gene = rand(0,4);    // Create random gene
+            $indiv->setGene3($randomGen, $gene); //substitute the gene into the individual
         }
     }
 

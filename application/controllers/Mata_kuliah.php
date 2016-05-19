@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Mata_kuliah extends CI_Controller {
+class Mata_kuliah extends MY_Controller {
 
 	public $data = array(
 		'breadcrumb' => 'Mata Kuliah',

@@ -32,12 +32,15 @@
                         <div class="page-title">
                             <h1>
                                 <?php echo $breadcrumb; ?>
-                                <small><?php if($subtitle)echo $subtitle; ?></small>
+                                <small><?php if(isset($subtitle))echo $subtitle; ?></small>
                             </h1>
                             <ol class="breadcrumb">
                                 <li><i class="fa fa-dashboard"></i>  <a href="<?php echo base_url(); ?>">Dashboard</a>
                                 </li>
-                                <li class="active"><?php echo $breadcrumb; ?></li>
+                                <?php
+                                    if($breadcrumb!="Dashboard")
+                                        echo "<li class='active'>$breadcrumb</li>";
+                                ?>
                             </ol>
                         </div>
                     </div>

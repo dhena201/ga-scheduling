@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Jadwal extends CI_Controller {
+class Jadwal extends MY_Controller {
 
 	public $data = array(
 		'breadcrumb' => 'Jadwal',
@@ -61,14 +61,14 @@ class Jadwal extends CI_Controller {
         echo json_encode($data);
     }
  
-    public function ajax_add()
+    public function ajax_add($thnajar,$id_kelas,$id_ruang,$hari,$jam)
     {
-        $this->_validate();
         $data = array(
-                'id_jadwal' => $this->input->post('id'),
-                'id_kuliah' => $this->input->post('id_kuliah'),
-                'id_dosen' => $this->input->post('id_dosen'),
-                'kapasitas' => $this->input->post('kapasitas')
+                'thn_ajar' => $thnajar,
+                'id_kelas' => $id_kelas,
+                'id_ruang' => $id_ruang,
+                'hari' => $hari,
+                'jam' => $jam
             );
         $insert = $this->jadwal->save($data);
         echo json_encode(array("status" => TRUE));

@@ -6,7 +6,7 @@
     <p>Select "Logout" below if you are ready<br> to end your current session.</p>
     <ul class="list-inline">
         <li>
-            <a href="<?php echo base_url('logout');?>" class="btn btn-green">
+            <a href="<?php echo base_url('auth/logout');?>" class="btn btn-green">
                 <strong>Logout</strong>
             </a>
         </li>

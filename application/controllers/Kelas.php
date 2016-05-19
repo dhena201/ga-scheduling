@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Kelas extends CI_Controller {
+class Kelas extends MY_Controller {
 
 	public $data = array(
 		'breadcrumb' => 'Kelas',

@@ -11,6 +11,7 @@ require_once('Fitness.php');  //supporting class file
 
     public $defaultGeneLength = 64;
     public  $waktuhabis = array();
+    // public  $status = array();
     public  $genes1=array();  //defines an empty  array of genes arbitrary length gen1 define ruang
     public  $genes2=array();  //defines an empty  array of genes arbitrary length gen2 define waktu
     public  $genes3=array();  //defines an empty  array of genes arbitrary length gen3 define hari
@@ -28,6 +29,7 @@ require_once('Fitness.php');  //supporting class file
         	$this->genes2[$i] = rand(0,(10 - (Fitness::$kelas[$i]['sks']))) ;
             $this->waktuhabis[$i] = $this->genes2[$i] + Fitness::$kelas[$i]['sks'];
         	$this->genes3[$i] = rand(0,4);
+            $this->status = "pass";
         }   
     }
 
@@ -36,7 +38,9 @@ require_once('Fitness.php');  //supporting class file
     public function setDefaultGeneLength($length) {
         $this->defaultGeneLength = $length;
     }
-    
+    public function getStatus($index) {
+        return $this->status[$index];
+    }
     public function getGene1($index) {
         return $this->genes1[$index];
     }
