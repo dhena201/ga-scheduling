@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Flex Admin - Responsive Admin Theme</title>
+    <title>SPKO</title>
 
     <!-- GLOBAL STYLES -->
     <link href="<?php echo base_url('asset/css/plugins/bootstrap/css/bootstrap.min.css'); ?>" rel="stylesheet">
@@ -22,6 +22,7 @@
 
     <!-- THEME DEMO STYLES -->
     <link href="<?php echo base_url('asset/css/demo.css'); ?>" rel="stylesheet">
+    <link rel="stylesheet" href="<?= base_url('asset/css/plugins/iCheck/square/blue.css') ?>">
 
     <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
@@ -51,16 +52,19 @@
                         <?php echo form_open("auth/login");?>
                             <fieldset>
                                 <div class="form-group">
-                                    <?php echo form_input($identity, '', 'type="email" class="form-control" placeholder="Email"');?>
+                                    <?php echo form_input($identity, '', 'class="form-control" placeholder="Username"');?>
                                 </div>
                                 <div class="form-group">
                                     <?php echo form_input($password, '', 'type="password" class="form-control" placeholder="Password"');?>
                                 </div>
-                                <div class="checkbox">
-                                    <label>
-                                        <?php echo form_checkbox('remember', '1', FALSE, 'id="remember"');?>
-                                        <?php echo 'Remember';?>
-                                    </label>
+                                <div class="form-group row">
+                                    <div class="checkbox icheck">
+                                        <label>
+                                          <?php echo form_checkbox('remember', '1', FALSE);?>
+                                          <?php echo 'Remember Me';?>
+                                          <!--<?php echo lang('login_remember_label', 'remember');?>-->
+                                        </label>
+                                    </div>
                                 </div>
                                 <div id="infoMessage" style="color:red"><?php echo $message;?></div>
                                 <br>
@@ -83,13 +87,7 @@
     <script src="<?php echo base_url('asset/js/jquery.min.js'); ?>"></script>
     <script src="<?php echo base_url('asset/js/plugins/bootstrap/bootstrap.min.js'); ?>"></script>
     <script src="<?php echo base_url('asset/js/plugins/slimscroll/jquery.slimscroll.min.js'); ?>"></script>
-    <!-- HISRC Retina Images -->
-    <script src="<?php echo base_url('asset/js/plugins/hisrc/hisrc.js'); ?>"></script>
-
-    <!-- PAGE LEVEL PLUGIN SCRIPTS -->
-
-    <!-- THEME SCRIPTS -->
-    <script src="<?php echo base_url('asset/js/flex.js'); ?>"></script>
+    <script src="<?= base_url('asset/js/plugins/iCheck/icheck.min.js') ?>"></script>
     <script>
       $(function () {
         $('input').iCheck({
@@ -99,6 +97,13 @@
         });
       });
     </script>
+    <!-- HISRC Retina Images -->
+    <script src="<?php echo base_url('asset/js/plugins/hisrc/hisrc.js'); ?>"></script>
+
+    <!-- PAGE LEVEL PLUGIN SCRIPTS -->
+
+    <!-- THEME SCRIPTS -->
+    <script src="<?php echo base_url('asset/js/flex.js'); ?>"></script>
 </body>
 
 </html>

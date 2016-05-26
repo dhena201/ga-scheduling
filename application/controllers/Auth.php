@@ -525,10 +525,7 @@ class Auth extends CI_Controller {
             );
 
             ////////Config Halaman////////
-            $this->data['breadcrumb'] = 'Manage User';
-            $this->data['subtitle'] = 'Add User';
-			$this->data['main_view'] = 'auth/create_user';
-			$this->load->view('template', $this->data, FALSE);
+           echo json_encode($this->data);
         }
     }
 

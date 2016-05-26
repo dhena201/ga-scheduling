@@ -2252,4 +2252,13 @@ class Ion_auth_model extends CI_Model
 		// just return the string IP address now for better compatibility
 		return $ip_address;
 	}
+	public function count_filtered(){
+        $query = $this->users();
+        return $query->num_rows();
+    }
+ 
+    public function count_all(){
+        $this->db->from($this->tables["users"]);
+        return $this->db->count_all_results();
+    }
 }

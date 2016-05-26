@@ -25,6 +25,7 @@ class Site extends CI_Controller {
 		$this->load->model('Mata_kuliah_model','matkul',TRUE);
 		$this->load->model('Ruang_model','ruang',TRUE);
 		$this->load->model('Kelas_model','kelas',TRUE);
+		$this->load->model('Users_model','user',TRUE);
 		$this->load->model('Jadwal_model','jadwal',TRUE);
 		if (!$this->ion_auth->logged_in())
 		{
@@ -37,11 +38,13 @@ class Site extends CI_Controller {
 		$this->data['breadcrumb'] = 'Dashboard';
 		$this->data['subtitle'] = '';
 		$this->data['main_view'] = 'dashboard';
+		$this->data['thn_ajar'] = $this->jadwal->get_thn_ajar();
 		$this->data['count_dosen'] = $this->dosen->count_all();
 		$this->data['count_matkul'] = $this->matkul->count_all();
 		$this->data['count_prodi'] = $this->prodi->count_all();
 		$this->data['count_ruang'] = $this->ruang->count_all();
 		$this->data['count_kelas'] = $this->kelas->count_all();
+		$this->data['count_user'] = $this->user->count_all();
 		$this->data['count_jadwal'] = $this->jadwal->count();
 		$this->load->view('template',$this->data);
 	}

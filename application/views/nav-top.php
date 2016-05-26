@@ -71,7 +71,7 @@
                 <li>
                     <a class="logout_open" href="<?php echo base_url('auth/logout');?>">
                         <i class="fa fa-sign-out"></i> Logout
-                        <strong>Administrator</strong>
+                        <strong><?= $this->session->userdata('identity');?></strong>
                     </a>
                 </li>
             </ul>

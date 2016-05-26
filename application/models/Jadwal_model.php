@@ -20,7 +20,8 @@ class Jadwal_model extends CI_Model {
         $this->db->join('dosen','kelas.id_dosen=dosen.id_dosen');
  		$this->db->join('prodi','prodi.id_prodi=mata_kuliah.id_prodi');
         $this->db->join('ruang','jadwal.id_ruang=ruang.id_ruang');
-        $this->db->where('thn_ajar',$thn_ajar);
+        $this->db->where('thn_ajar',$thn_ajar);    
+        
         $i = 0;
      
         foreach ($this->column as $item) // loop column
@@ -139,7 +140,7 @@ class Jadwal_model extends CI_Model {
         return $this->db->count_all_results();
     }
     public function count(){
-        $this->db->from($this->table)->select('thn_ajar');
+        $this->db->from($this->table)->select('thn_ajar')->group_by('thn_ajar');
         $query = $this->db->get();
         return $query->num_rows();
     }

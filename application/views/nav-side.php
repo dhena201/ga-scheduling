@@ -22,11 +22,13 @@
         </li>
         <!-- end DASHBOARD LINK -->
         <!-- begin USER DROPDOWN -->
+        <?php if($this->ion_auth->is_admin()):?>
         <li>
-            <a href="<?php echo base_url('auth'); ?>">
-                <i class="fa fa-user"></i> User
+            <a href="<?php echo base_url('user'); ?>">
+                <i class="fa fa-user"></i> Operator
             </a>
         </li>
+        <?php endif; ?>
         <!-- end USER LINK -->
         <!-- begin DOSEN DROPDOWN -->
         <li>
@@ -43,11 +45,13 @@
         </li>
         <!-- end MATA KULIAH LINK -->
         <!-- begin PROGRAM STUDI DROPDOWN -->
+        <?php if($this->ion_auth->is_admin()):?>
         <li>
             <a href="<?php echo base_url('program-studi'); ?>">
                 <i class="fa fa-thumb-tack"></i> Program Studi
             </a>
         </li>
+        <?php endif; ?>
         <!-- end PROGRAM STUDI LINK -->
         <!-- begin RUANG DROPDOWN -->
         <li>
@@ -64,6 +68,7 @@
         </li>
         <!-- end KELAS LINK -->
         <!-- begin JADWAL DROPDOWN -->
+        <?php if(!$this->ion_auth->is_admin()):?>
         <li class="panel">
             <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#tables">
                 <i class="fa fa-table"></i> Jadwal <i class="fa fa-caret-down"></i>
@@ -81,6 +86,7 @@
                 </li>
             </ul>
         </li>
+        <?php endif; ?>
         <!-- end JADWAL DROPDOWN -->
     </ul>
     <!-- /.side-nav -->

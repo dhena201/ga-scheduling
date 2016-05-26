@@ -60,51 +60,12 @@ var save_method; //for save method string
 var table;
  
 $(document).ready(function() {
+    ajax_list(0);
     $('#thn_ajar').change(function(){
-            var thnajar = $('#thn_ajar').val();
-            if(table){
-                table.destroy();
-            }
-            table = $('#example-table').DataTable({
- 
-            "processing": true, //Feature control the processing indicator.
-            "serverSide": true, //Feature control DataTables' server-side processing mode.
-            "order": [], //Initial no order.
-     
-            // Load data for the table's content from an Ajax source
-            "ajax": {
-                "url": "<?php echo base_url('jadwal/ajax_list')?>/"+thnajar,
-                "type": "POST"
-            },
-            "columns" :[
-                {"data" : "nama_kuliah"},
-                {"data" : "nama_dosen"},
-                {"data" : "nama_prodi"},
-                {"data" : "kelas"},
-                {"data" : "kapasitas"},
-                {"data" : "nama_ruang"},
-                {"data" : "hari"},
-                {"data" : "jam"},
-                {"data":"id_jadwal",render:function(data){
-                    var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_data("+data+")'><i class='fa fa-trash-o'></i></a>";
-                    return btn;
-                }}
-            ],
-            //Set column definition initialisation properties.
-            "columnDefs": [
-            {
-                "targets": [ -1 ], //last column
-                "orderable": false, //set not orderable
-            },
-            ],
- 
-            });
-        
+        var thnajar = $('#thn_ajar').val();
+        ajax_list(thnajar);        
     });
 
-    
- 
- 
     //set input/textarea/select event when change value, remove class error and remove text help block
     $("input").change(function(){
         $(this).parent().parent().removeClass('has-error');
@@ -120,6 +81,46 @@ $(document).ready(function() {
     });
     //dependent dropdown
 });
+
+function ajax_list(thnajar){
+    if(table){
+        table.destroy();
+    }
+    table = $('#example-table').DataTable({
+
+    "processing": true, //Feature control the processing indicator.
+    "serverSide": true, //Feature control DataTables' server-side processing mode.
+    "order": [], //Initial no order.
+
+    // Load data for the table's content from an Ajax source
+    "ajax": {
+        "url": "<?php echo base_url('jadwal/ajax_list')?>/"+thnajar,
+        "type": "POST"
+    },
+    "columns" :[
+        {"data" : "nama_kuliah"},
+        {"data" : "nama_dosen"},
+        {"data" : "nama_prodi"},
+        {"data" : "kelas"},
+        {"data" : "kapasitas"},
+        {"data" : "nama_ruang"},
+        {"data" : "hari"},
+        {"data" : "jam"},
+        {"data":"id_jadwal",render:function(data){
+            var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_data("+data+")'><i class='fa fa-trash-o'></i></a>";
+            return btn;
+        }}
+    ],
+    //Set column definition initialisation properties.
+    "columnDefs": [
+    {
+        "targets": [ -1 ], //last column
+        "orderable": false, //set not orderable
+    },
+    ],
+
+    });
+}
 
 function add_data()
 {
