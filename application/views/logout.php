@@ -1,9 +1,8 @@
-<div class="logout-message">
-    <img class="img-circle img-logout" src="img/profile-pic.jpg" alt="">
+<div class="logout-message" style="padding-top:20px">
     <h3>
-        <i class="fa fa-sign-out text-green"></i> Ready to go?
+        <i class="fa fa-sign-out text-green"></i> Anda Yakin?
     </h3>
-    <p>Select "Logout" below if you are ready<br> to end your current session.</p>
+    <p>Pilih "Logout" jika anda yakin<br> mengkahiri session ini.</p>
     <ul class="list-inline">
         <li>
             <a href="<?php echo base_url('auth/logout');?>" class="btn btn-green">

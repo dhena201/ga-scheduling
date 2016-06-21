@@ -8,9 +8,8 @@ class User extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Users_model','user',TRUE);
 		$this->load->library(array('ion_auth','form_validation'));
-		$this->load->helper(array('url','language'));
+		$this->load->helper(array('url','language','form'));
 		$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
-
 		$this->lang->load('auth');
 	}
 
@@ -68,6 +67,7 @@ class User extends CI_Controller {
                 'type'  => 'password',
                 'value' => $this->form_validation->set_value('password_confirm'),
             );
+            
 			$this->load->view('template', $this->data, FALSE);
 		}
 	}
@@ -100,6 +100,7 @@ class User extends CI_Controller {
     }
     function ajax_update($id)
 	{
+        $this->_validate();
 
 		if (!$this->ion_auth->logged_in() || (!$this->ion_auth->is_admin() && !($this->ion_auth->user()->row()->id == $id)))
 		{
@@ -129,6 +130,8 @@ class User extends CI_Controller {
 			{
 				$data = array(
 					'name' => $this->input->post('name'),
+                    'username' => $this->input->post('identity'),
+                    'email' => $this->input->post('email')
 				);
 
 				// update the password if it was posted
@@ -148,7 +151,7 @@ class User extends CI_Controller {
 			    else
 			    {
 			    	// redirect them back to the admin page if admin, or to the base url if non admin
-				    $this->session->set_flashdata('message', $this->ion_auth->errors() );
+				    $this->data['message'] = $this->ion_auth->errors();
 				    $this->data['status'] = FALSE;
 		            echo json_encode($this->data);
 		            exit();
@@ -193,6 +196,7 @@ class User extends CI_Controller {
         $data = $this->user->get_by_id($id);
         echo json_encode($data);
     }
+    
     function ajax_add()
     {
     	$this->_validate();
@@ -200,7 +204,7 @@ class User extends CI_Controller {
         {
             redirect('auth/login', 'refresh');
         }
-
+        
         $tables = $this->config->item('tables','ion_auth');
         $identity_column = $this->config->item('identity','ion_auth');
         $this->data['identity_column'] = $identity_column;
@@ -235,7 +239,9 @@ class User extends CI_Controller {
             // check to see if we are creating the user
             // redirect them back to the admin page
             $this->session->set_flashdata('message', $this->ion_auth->messages());
-            echo json_encode(array("status" => TRUE));
+            
+            $this->data['status'] = TRUE;
+            echo json_encode($this->data);
         }
         else
         {
@@ -258,7 +264,7 @@ class User extends CI_Controller {
             // }
             $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
             if($this->data['message']){
-            	$this->data['status'] = TRUE;
+            	$this->data['status'] = FALSE;
             	echo json_encode($this->data);
             	exit();
             }
@@ -296,29 +302,33 @@ class User extends CI_Controller {
             $data['error_string'][] = 'Email Belum Diisi';
             $data['status'] = FALSE;
         }
-        if($this->input->post('password') == '')
-        {
-            $data['inputerror'][] = 'password';
-            $data['error_string'][] = 'Password Belum Diisi';
-            $data['status'] = FALSE;
-        }
-        if($this->input->post('password_confirm') == '')
-        {
-            $data['inputerror'][] = 'password_confirm';
-            $data['error_string'][] = 'Konfirmasi Password Belum Diisi';
-            $data['status'] = FALSE;
-        }
-        if(strlen($this->input->post('password'))<8 or strlen($this->input->post('password'))>20)
-        {
-            $data['inputerror'][] = 'password';
-            $data['error_string'][] = 'Password Paling Sedikit 8 Karakter dan Maksimal 20 Karakter';
-            $data['status'] = FALSE;
-        }
-        if(strlen($this->input->post('password_confirm'))<8 or strlen($this->input->post('password'))>20)
-        {
-            $data['inputerror'][] = 'password_confirm';
-            $data['error_string'][] = 'Password Paling Sedikit 8 Karakter dan Maksimal 20 Karakter';
-            $data['status'] = FALSE;
+        // if (!$this->upload->do_upload())
+        // {
+        //     $data['inputerror'][] = 'userfile';
+        //     $data['error_string'][] = $this->upload->display_errors();
+        //     $data['status'] = FALSE;
+        // }
+        if($this->input->post('method') =='add'){
+            if($this->input->post('password') == '')
+            {
+                $data['inputerror'][] = 'password';
+                $data['error_string'][] = 'Password Belum Diisi';
+                $data['status'] = FALSE;
+            }elseif(strlen($this->input->post('password'))<8 or strlen($this->input->post('password'))>20){
+                $data['inputerror'][] = 'password';
+                $data['error_string'][] = 'Password Paling Sedikit 8 Karakter dan Maksimal 20 Karakter';
+                $data['status'] = FALSE;
+            }
+            if($this->input->post('password_confirm') == '')
+            {
+                $data['inputerror'][] = 'password_confirm';
+                $data['error_string'][] = 'Konfirmasi Password Belum Diisi';
+                $data['status'] = FALSE;
+            }elseif(strlen($this->input->post('password_confirm'))<8 or strlen($this->input->post('password'))>20){
+                $data['inputerror'][] = 'password_confirm';
+                $data['error_string'][] = 'Password Paling Sedikit 8 Karakter dan Maksimal 20 Karakter';
+                $data['status'] = FALSE;
+            }
         }
         if($data['status'] === FALSE)
         {

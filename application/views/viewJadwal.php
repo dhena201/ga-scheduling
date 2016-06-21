@@ -38,7 +38,9 @@
                             <th>Ruang</th>
                             <th>Hari</th>
                             <th>Jam</th>
+                            <?php if(!$this->ion_auth->is_admin()):?>
                             <th style="width:110px;">Aksi</th>
+                            <?php endif;?>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,7 +62,7 @@ var save_method; //for save method string
 var table;
  
 $(document).ready(function() {
-    ajax_list(0);
+    ajax_list();
     $('#thn_ajar').change(function(){
         var thnajar = $('#thn_ajar').val();
         ajax_list(thnajar);        
@@ -105,17 +107,21 @@ function ajax_list(thnajar){
         {"data" : "kapasitas"},
         {"data" : "nama_ruang"},
         {"data" : "hari"},
-        {"data" : "jam"},
-        {"data":"id_jadwal",render:function(data){
-            var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_data("+data+")'><i class='fa fa-trash-o'></i></a>";
+        {"data" : "jam"}
+        <?php if(!$this->ion_auth->is_admin()):?>
+        ,{"data":"id_jadwal",render:function(data){
+            var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_this("+data+")'><i class='fa fa-trash-o'></i></a>";
             return btn;
         }}
+        <?php endif; ?>
     ],
     //Set column definition initialisation properties.
     "columnDefs": [
-    {
+    {   <?php if(!$this->ion_auth->is_admin()):?>
         "targets": [ -1 ], //last column
+        <?php endif; ?>
         "orderable": false, //set not orderable
+        
     },
     ],
 
@@ -215,11 +221,13 @@ function save()
         }
     });
 }
- 
+function delete_this(id){
+    $('#modalDelete').attr('onclick','delete_data('+id+')');
+    $('#myModal').modal('show');
+}
 function delete_data(id)
 {
-    if(confirm('Apakah Anda Yakin Menghapus Data Ini?'))
-    {
+    
         // ajax delete data to database
         $.ajax({
             url : "<?php echo base_url('jadwal/ajax_delete')?>/"+id,
@@ -228,7 +236,7 @@ function delete_data(id)
             success: function(data)
             {
                 //if success reload ajax table
-                $('#modal_form').modal('hide');
+                $('#myModal').modal('hide');
                 reload_table();
             },
             error: function (jqXHR, textStatus, errorThrown)
@@ -237,7 +245,7 @@ function delete_data(id)
             }
         });
  
-    }
+    
 }
  
 </script>

@@ -44,8 +44,9 @@ class Site extends CI_Controller {
 		$this->data['count_prodi'] = $this->prodi->count_all();
 		$this->data['count_ruang'] = $this->ruang->count_all();
 		$this->data['count_kelas'] = $this->kelas->count_all();
-		$this->data['count_user'] = $this->user->count_all();
+		$this->data['count_user'] = $this->user->count_filtered();
 		$this->data['count_jadwal'] = $this->jadwal->count();
+		$this->data['ruang'] = $this->ruang->get_datatables();
 		$this->load->view('template',$this->data);
 	}
 }

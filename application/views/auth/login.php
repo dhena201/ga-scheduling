@@ -57,8 +57,8 @@
                                 <div class="form-group">
                                     <?php echo form_input($password, '', 'type="password" class="form-control" placeholder="Password"');?>
                                 </div>
-                                <div class="form-group row">
-                                    <div class="checkbox icheck">
+                                <div class="form-group">
+                                    <div class="checkbox icheck" style="padding-left:0">
                                         <label>
                                           <?php echo form_checkbox('remember', '1', FALSE);?>
                                           <?php echo 'Remember Me';?>
@@ -73,7 +73,7 @@
                             </fieldset>
                             <br>
                             <p class="small">
-                                <a href="<?php echo base_url('auth/forgot_password')?>"><?php echo lang('login_forgot_password');?></a>
+                                <a href="<?php echo base_url('auth/forgot_password')?>">Lupa Password?</a>
                             </p>
                             
                         <?php echo form_close();?>

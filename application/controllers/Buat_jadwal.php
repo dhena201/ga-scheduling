@@ -28,25 +28,25 @@ class Buat_jadwal extends MY_Controller {
 		$this->load->view('template',$this->data);
 	}
 
-	public function ajax_list($thnajar)
+	public function ajax_listtmp($thnajar)
     {
-        $list = $this->jadwal->get_datatables($thnajar);
+        $list = $this->jadwal->get_datatablestmp($thnajar);
         $data = array();
         // $no = $_POST['start'];
         foreach ($list as $jadwal) {
             // $no++;
             $row = array(
                 "id_jadwal" => $jadwal['id_jadwal'],
-            	"thn_ajar" => $jadwal['thn_ajar'],
-            	"nama_kuliah" => $jadwal['nama_kuliah'],
-            	"nama_dosen" => $jadwal['nama_dosen'],
-            	"nama_prodi" => $jadwal['nama_prodi'],
+                "thn_ajar" => $jadwal['thn_ajar'],
+                "nama_kuliah" => $jadwal['nama_kuliah'],
+                "nama_dosen" => $jadwal['nama_dosen'],
+                "nama_prodi" => $jadwal['nama_prodi'],
                 "kelas" => $jadwal['kelas'],
-            	"kapasitas" => $jadwal['kapasitas'],
+                "kapasitas" => $jadwal['kapasitas'],
                 "nama_ruang" => $jadwal['nama_ruang'],
                 "hari" => $jadwal['hari'],
                 "jam" => $jadwal['jam']
-            	);
+                );
 
                      
             $data[] = $row;
@@ -54,21 +54,41 @@ class Buat_jadwal extends MY_Controller {
  
         $output = array(
                         // "draw" => $_POST['draw'],
-                        "recordsTotal" => $this->jadwal->count_all(),
-                        "recordsFiltered" => $this->jadwal->count_filtered(),
+                        "recordsTotal" => $this->jadwal->count_alltmp(),
+                        "recordsFiltered" => $this->jadwal->count_filteredtmp($thnajar),
                         "data" => $data,
                 );
         //output to json format
         echo json_encode($output);
     }
- 
-    public function ajax_edit($id)
+    public function ajax_savetmp($thnajar){
+        $list = $this->jadwal->get_datatablestmp($thnajar);
+        $data = array();
+        // $no = $_POST['start'];
+        foreach ($list as $jadwal) {
+            // $no++;
+            $row = array(
+                "id_jadwal" => "",
+                "thn_ajar" => $jadwal['thn_ajar'],
+                "id_kelas" => $jadwal['id_kelas'],
+                "id_ruang" => $jadwal['id_ruang'],
+                "hari" => $jadwal['hari'],
+                "jam" => $jadwal['jam']
+                );
+
+                     
+            $data[] = $row;
+        }
+        $this->jadwal->save_batch($data,$thnajar);
+        echo json_encode(array("status" => TRUE));
+
+    }
+    public function ajax_edittmp($id)
     {
-        $data = $this->jadwal->get_by_id($id);
+        $data = $this->jadwal->get_by_idtmp($id);
         echo json_encode($data);
     }
- 
-    public function ajax_update()
+    public function ajax_updatetmp()
     {
         $this->_validate();
         $data = array(
@@ -79,16 +99,9 @@ class Buat_jadwal extends MY_Controller {
                 'hari' => $this->input->post('hari'),
                 'jam' => $this->input->post('jam')
             );
-        $this->jadwal->update($data);
+        $this->jadwal->updatetmp($data);
         echo json_encode(array("status" => TRUE));
     }
- 
-    public function ajax_delete($id)
-    {
-        $this->jadwal->delete_by_id($id);
-        echo json_encode(array("status" => TRUE));
-    }
- 
     private function _validate()
     {
         $data = array();
@@ -115,5 +128,6 @@ class Buat_jadwal extends MY_Controller {
             exit();
         }
     }
+ 
 }
 ?>

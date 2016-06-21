@@ -53,7 +53,7 @@
                             <fieldset>
                                 <div class="form-group">
                                     <p>
-                                    <label for="identity"><?php echo (($type=='email') ? sprintf(lang('forgot_password_email_label'), $identity_label) : sprintf(lang('forgot_password_identity_label'), $identity_label));?></label> <br />
+                                    <label for="identity">Username</label> <br />
                                     <?php echo form_input($identity);?>
                                     </p>
                                 </div>

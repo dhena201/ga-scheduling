@@ -35,6 +35,15 @@ class GA extends MY_Controller{
 		flush();
 	//  usleep(10000); ////wait for 0.10 seconds
 	}
+	public function sendMsg2($id) {
+		
+        echo "id: $id".PHP_EOL;
+		echo "event: update2".PHP_EOL;
+		echo PHP_EOL;
+		ob_flush();
+		flush();
+	//  usleep(10000); ////wait for 0.10 seconds
+	}
 	public function convertTime($jamkul){
 		$menit = intval($jamkul)*50;
 		$menitall = $menit+440;
@@ -79,7 +88,7 @@ class GA extends MY_Controller{
         return $ruang;
     }
     public function saveTmp($fittest,$thnajar){
-		$hariall = array('Senin','Selasa','Rabu','Kamis','Jumat');
+		$hariall = array('Senin','Selasa','Rabu','Kamis','Jum\'at');
     	$this->jadwal->delTmp();
     	$row = array();
     	for($i=0;$i<count(Fitness::$kelas);$i++){
@@ -110,9 +119,6 @@ class GA extends MY_Controller{
 		$hariall = array('Senin','Selasa','Rabu','Kamis','Jumat');
 		$response = array();  //holdse the JSON object to be returned
 		$response['done']=false; //assume not done 
-		$response['gen1']=array();
-		$response['gen2']=array();
-		$response['gen3']=array();
 		$response['status']=array();
 		Fitness::setInput($this->getKelas(),$this->getRuang());
 		// Create an initial population
@@ -137,7 +143,8 @@ class GA extends MY_Controller{
 					$time2 = microtime(true);
 					$response['elapsed'] = round($time2-$time1,2)."s";
 					$response['message'] = '<strong>PHP Server Working...</strong>';
-					$serverTime = microtime();			
+					$serverTime = microtime();
+					$this->sendMsg2($serverTime);			
 					$this->sendMsg($serverTime,json_encode($response));
 				}
 				else{

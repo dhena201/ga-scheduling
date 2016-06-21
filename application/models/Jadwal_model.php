@@ -11,7 +11,7 @@ class Jadwal_model extends CI_Model {
 		parent::__construct();
 	}
 
-	private function _get_datatables_query($thn_ajar){
+	private function _get_datatables_query($thn_ajar=NULL){
         $this->db->select('*');
         $this->db->select("DATE_FORMAT(jam,'%H:%i') as jam");
         $this->db->from($this->table);
@@ -20,7 +20,9 @@ class Jadwal_model extends CI_Model {
         $this->db->join('dosen','kelas.id_dosen=dosen.id_dosen');
  		$this->db->join('prodi','prodi.id_prodi=mata_kuliah.id_prodi');
         $this->db->join('ruang','jadwal.id_ruang=ruang.id_ruang');
-        $this->db->where('thn_ajar',$thn_ajar);    
+        if(isset($thn_ajar)){
+            $this->db->where('thn_ajar',$thn_ajar);
+        }
         
         $i = 0;
      
@@ -56,7 +58,7 @@ class Jadwal_model extends CI_Model {
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
-    private function _get_datatables_querytmp($thn_ajar){
+    private function _get_datatables_querytmp($thn_ajar=NULL){
         $this->db->select('*');
         $this->db->select("DATE_FORMAT(jam,'%H:%i') as jam");
         $this->db->from($this->tmp);
@@ -65,7 +67,9 @@ class Jadwal_model extends CI_Model {
         $this->db->join('dosen','kelas.id_dosen=dosen.id_dosen');
         $this->db->join('prodi','prodi.id_prodi=mata_kuliah.id_prodi');
         $this->db->join('ruang','tmp_jadwal.id_ruang=ruang.id_ruang');
-        $this->db->where('thn_ajar',$thn_ajar);
+        if(isset($thn_ajar)){
+            $this->db->where('thn_ajar',$thn_ajar);
+        }
         $i = 0;
      
         foreach ($this->column as $item) // loop column
@@ -151,6 +155,13 @@ class Jadwal_model extends CI_Model {
  
         return $query->row();
     }
+    public function get_by_idtmp($id){
+        $this->_get_datatables_querytmp();
+        $this->db->where('id_jadwal',$id);
+        $query = $this->db->get();
+ 
+        return $query->row();
+    }
     public function get_thn_ajar(){
         $this->db->from($this->table);
         $this->db->select('thn_ajar');
@@ -178,6 +189,11 @@ class Jadwal_model extends CI_Model {
     public function update($data){
     	$this->db->where('id_jadwal',$data['id_jadwal']);
         $this->db->update($this->table, $data);
+        return $this->db->affected_rows();
+    }
+    public function updatetmp($data){
+        $this->db->where('id_jadwal',$data['id_jadwal']);
+        $this->db->update($this->tmp, $data);
         return $this->db->affected_rows();
     }
     public function delete_by_thn($thn){

@@ -53,7 +53,7 @@ $(document).ready(function() {
             {"data" : "nama_dosen"},
             {"data" : "nama_prodi"},
             {"data":"id_dosen",render:function(data){
-                var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_data("+data+")'><i class='fa fa-trash-o'></i></a>";
+                var btn = "<a class='btn btn-sm btn-primary' href='javascript:void()' title='Edit' onclick='edit_data("+data+")'><i class='fa fa-edit'></i></a>&nbsp&nbsp<a class='btn btn-sm btn-danger' href='javascript:void()' title='Hapus' onclick='delete_this("+data+")'><i class='fa fa-trash-o'></i></a>";
                 return btn;
             }
             }
@@ -178,11 +178,13 @@ function save()
         }
     });
 }
- 
+function delete_this(id){
+    $('#modalDelete').attr('onclick','delete_data('+id+')');
+    $('#myModal').modal('show');
+}
 function delete_data(id)
 {
-    if(confirm('Apakah Anda Yakin Menghapus Data Ini?'))
-    {
+    
         // ajax delete data to database
         $.ajax({
             url : "<?php echo base_url('dosen/ajax_delete')?>/"+id,
@@ -191,7 +193,7 @@ function delete_data(id)
             success: function(data)
             {
                 //if success reload ajax table
-                $('#modal_form').modal('hide');
+                $('#myModal').modal('hide');
                 reload_table();
             },
             error: function (jqXHR, textStatus, errorThrown)
@@ -200,7 +202,7 @@ function delete_data(id)
             }
         });
  
-    }
+    
 }
  
 </script>

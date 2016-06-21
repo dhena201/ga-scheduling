@@ -58,16 +58,11 @@
             </a>
             <ul class="dropdown-menu dropdown-user">
                 <li>
-                    <a href="profile.html">
-                        <i class="fa fa-user"></i> My Profile
+                    <a href="<?= base_urL('profil')?>">
+                        <i class="fa fa-user"></i> Profil
                     </a>
                 </li>
                 <li class="divider"></li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-gear"></i> Settings
-                    </a>
-                </li>
                 <li>
                     <a class="logout_open" href="<?php echo base_url('auth/logout');?>">
                         <i class="fa fa-sign-out"></i> Logout
