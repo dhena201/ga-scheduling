@@ -12,10 +12,10 @@ require_once('Fitness.php');  //supporting class file
 class algorithm {
 
     /* GA parameters */
-  public static $uniformRate=0.4;  /* crosssover determine what where to break gene string */
-  public static $mutationRate=0.1; /* When choosing which genes to mutate what rate of random values are mutated */
-  public static $poolSize=15;  /* When selecting for crossover how large each pool should be */
-  public static $max_generation_stagnant=200;  /*how many unchanged generations before we end */
+  public static $uniformRate=0.6;  /* crosssover determine what where to break gene string */
+  public static $mutationRate=0.01; /* When choosing which genes to mutate what rate of random values are mutated */
+  public static $poolSize=5;  /* When selecting for crossover how large each pool should be */
+  public static $max_generation_stagnant=100;  /*how many unchanged generations before we end */
   public static $elitism=true;
 
     /* Public methods */
@@ -34,9 +34,6 @@ class algorithm {
             $newPopulation->saveIndividual(0, $pop->getFittest());
             $elitismOffset = 1;
 	    }
-        else{
-            $elitismOffset = 0;
-        }
 		
         // Loop over the population size and create new individuals with
         // crossover
@@ -55,7 +52,7 @@ class algorithm {
         }
 
         // Mutate population
-	    $count_mutate = intval(algorithm::$mutationRate*($pop->size())*count(FItness::$kelas));
+	    $count_mutate = intval(algorithm::$mutationRate*($pop->size())*count(Fitness::$kelas));
         for ($i=0; $i < $count_mutate; $i++) {
             $rando = rand($elitismOffset,$pop->size()-1);
             algorithm::mutate($newPopulation->getIndividual($rando));
@@ -83,19 +80,14 @@ class algorithm {
 
     // Mutate an individual
     private static function mutate( $indiv) {
-        $randomGen = rand(0,count(Fitness::$kelas)-1);
-        if(rand(0,1)==1){
-            $gene = Fitness::$ruang[rand(0, count(Fitness::$ruang) - 1)];    // Create random gene
-            $indiv->setGene1($randomGen, $gene); //substitute the gene into the individual
-        }
-        if(rand(0,1)==1){
-            $gene = rand(0,(10 - (Fitness::$kelas[$randomGen]['sks']))) ;    // Create random gene
-            $indiv->setGene2($randomGen, $gene); //substitute the gene into the individual
-        }
-        if(rand(0,1)==1){
-            $gene = rand(0,4);    // Create random gene
-            $indiv->setGene3($randomGen, $gene); //substitute the gene into the individual
-        }
+        $randomGen = rand(0,count(Fitness::$kelas)-1);    
+        $gene = Fitness::$ruang[rand(0, count(Fitness::$ruang) - 1)];    // Create random gene
+        $indiv->setGene1($randomGen, $gene); //substitute the gene into the individual
+        $gene = rand(0,(10 - (Fitness::$kelas[$randomGen]['sks']))) ;    // Create random gene
+        $indiv->setGene2($randomGen, $gene); //substitute the gene into the individual
+        $gene = rand(0,4);    // Create random gene
+        $indiv->setGene3($randomGen, $gene); //substitute the gene into the individual
+    
     }
 
     // Select a pool of individuals for crossover

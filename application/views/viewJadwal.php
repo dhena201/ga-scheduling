@@ -1,3 +1,8 @@
+<script src="<?php echo base_url('/asset/js/plugins/datatables/extensions/Buttons/js/dataTables.buttons.min.js')?>" type="text/javascript"></script>
+<script src="<?php echo base_url('/asset/js/plugins/datatables/extensions/Buttons/js/buttons.html5.min.js')?>" type="text/javascript"></script>
+<script src="<?php echo base_url('/asset/js/plugins/datatables/extensions/Buttons/js/buttons.print.min.js')?>" type="text/javascript"></script>
+<script src="<?php echo base_url('/asset/js/plugins/pdfmake.min.js')?>" type="text/javascript"></script>
+
 <!-- begin BASIC TABLES MAIN ROW -->
 <div class="row">
 
@@ -24,12 +29,18 @@
                             ?>
                         </select>
                     </div>
+                    <?php if(!$this->ion_auth->is_admin()): ?>
+                    <div class="col-md-6">
+                        <button class="btn btn-success" onclick="add_data()"><i class="fa fa-plus"></i> Tambah</button>
+                    </div>
+                    <?php endif;?>
                 </div>
                 </div>
                 <br>
-                <table id="example-table" class="table table-striped table-bordered table-hover table-green" width="100%">
+                <table id="example-table" class="table table-striped table-bordered table-green table-hover" width="100%">
                     <thead>
                         <tr>
+                            <th>Kode</th>
                             <th>Mata Kuliah</th>
                             <th>Dosen</th>
                             <th>Program Studi</th>
@@ -82,24 +93,99 @@ $(document).ready(function() {
         $(this).next().empty();
     });
     //dependent dropdown
+    $("#kategori").change(function(){
+        $("#mk > option").remove();
+        $("#mk").append("<option value=''>--Pilih Mata Kuliah--</option>");
+        var id_kategori = $("#kategori").val();
+        if(id_kategori){
+            get_mk(id_kategori);
+        }
+        console.log(id_kategori);
+        
+        
+    });
+    $("#asdos").change(function(){
+        $("#dosen > option").remove();
+        $("#dosen").append("<option value=''>--Pilih Dosen Pengampu--</option>");
+        var id = $("#asdos").val();
+        if(id){
+            get_dosen(id);
+        }
+    });
+    $('#mk').change(function(){
+        var id = $("#mk").val();
+        if(id){
+            get_kelas(id);
+        }
+    });
 });
-
+function get_mk(id,id_kuliah){
+    $.ajax({
+        url : "<?php echo base_url('kelas/ajax_get_mk/')?>/" + id,
+        type : "GET",
+        dataType : "JSON",
+        success: function(data){
+            $.each(data, function(i, data){
+                $("#mk").append("<option value='"+data.id_kuliah+"'>"+data.kd_kuliah+"   "+data.nama_kuliah+"</option>");
+            });
+            if(id_kuliah){
+                $('#mk').val(id_kuliah);
+            }
+        },
+         error: function (jqXHR, textStatus, errorThrown){
+            alert('Error get data from ajax');
+        }
+    });
+}
+function get_dosen(id,id_dosen){
+    $.ajax({
+        url : "<?php echo base_url('kelas/ajax_get_dosen/')?>/" + id,
+        type : "GET",
+        dataType : "JSON",
+        success: function(data){
+            $.each(data, function(i, data){
+                $("#dosen").append("<option value='"+data.id_dosen+"'>"+data.nama_dosen+"</option>");
+                console.log(data.id_dosen);
+            });
+            if(id_dosen){
+                $('#dosen').val(id_dosen);
+            }
+        },
+         error: function (jqXHR, textStatus, errorThrown){
+            alert('Error get data from ajax');
+        }
+    });
+}
+function get_kelas(id){
+    $.ajax({
+        url : "<?php echo base_url('kelas/ajax_get_kelas/')?>/" + id,
+        type : "GET",
+        dataType : "JSON",
+        success: function(data){
+            $("#kelas").val(data);
+        },
+         error: function (jqXHR, textStatus, errorThrown){
+            alert('Error get data from ajax');
+        }
+    });
+}
 function ajax_list(thnajar){
     if(table){
         table.destroy();
     }
     table = $('#example-table').DataTable({
 
-    "processing": true, //Feature control the processing indicator.
-    "serverSide": true, //Feature control DataTables' server-side processing mode.
+    // "processing": true, //Feature control the processing indicator.
+    // "serverSide": true, //Feature control DataTables' server-side processing mode.
     "order": [], //Initial no order.
 
     // Load data for the table's content from an Ajax source
     "ajax": {
         "url": "<?php echo base_url('jadwal/ajax_list')?>/"+thnajar,
-        "type": "POST"
+        "type": "GET"
     },
     "columns" :[
+        {"data" : "kd_kuliah"},
         {"data" : "nama_kuliah"},
         {"data" : "nama_dosen"},
         {"data" : "nama_prodi"},
@@ -116,22 +202,32 @@ function ajax_list(thnajar){
         <?php endif; ?>
     ],
     //Set column definition initialisation properties.
-    "columnDefs": [
-    {   <?php if(!$this->ion_auth->is_admin()):?>
+    "columnDefs": [{   <?php if(!$this->ion_auth->is_admin()):?>
         "targets": [ -1 ], //last column
         <?php endif; ?>
         "orderable": false, //set not orderable
-        
-    },
+        },
     ],
-
-    });
+    "dom":'Blfrtip',
+    "buttons":[
+        {   extend: 'print',
+            title: 'Jadwal Kuliah Tahun Akademik '+thnajar,
+            exportOptions: {
+                columns: [0, 1, 2, 4, 5, 6, 7, 8]
+            }
+        },
+    ],
+    }
+    
+    );
 }
 
 function add_data()
 {
     save_method = 'add';
     $('#form')[0].reset(); // reset form on modals
+    $('[name="id_prodi"]').attr('disabled',false);
+    $('#mk').attr('disabled',false);
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal('show'); // show bootstrap modal
@@ -153,17 +249,33 @@ function edit_data(id)
         dataType: "JSON",
         success: function(data)
         {
- 
+            get_mk(data.id_prodi,data.id_kuliah);
+            $('[name="id_prodi"]').val(data.id_prodi);
+            $('#mk').val(data.id_kuliah);
+            $('[name="id_prodi"]').attr('disabled',true);
+            $('#mk').attr('disabled',true);
+            $('[name="kelas"]').val(data.kelas);
             $('[name="id"]').val(data.id_jadwal);
             $('[name="thnajar"]').val(data.thn_ajar);
             $('[name="id_kelas"]').val(data.id_kelas);
-            $('[name="nama_prodi"]').val(data.nama_prodi);
-            $('[name="nama_kuliah"]').val(data.nama_kuliah);            
-            $('[name="nama_dosen"]').val(data.nama_dosen);
             $('[name="kapasitas"]').val(data.kapasitas);
             $('[name="ruang"]').val(data.id_ruang);
             $('[name="hari"]').val(data.hari);
             $('[name="jam"]').val(data.jam);
+            $.ajax({
+                url : "<?php echo base_url('Dosen/ajax_edit/')?>/" + data.id_dosen,
+                type: "GET",
+                dataType: "JSON",
+                success: function(dat)
+                {
+                    get_dosen(dat.id_prodi,dat.id_dosen);
+                    $('[name="asal_prodi"]').val(dat.id_prodi);
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    alert('Error get data from ajax');
+                }
+            });
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Ubah Data'); // Set title to Bootstrap modal title
  
@@ -265,28 +377,58 @@ function delete_data(id)
                     <div class="form-group">
                         <label class="control-label col-md-3">Program Studi</label>
                         <div class="col-md-9">
-                            <input name="nama_prodi" type="text" class="form-control" readonly>
+                            <select id="kategori" name="id_prodi" class="form-control">
+                                <option value="">--Pilih Program Studi--</option>
+                                <?php foreach($prodi as $row){
+                                if($row['nama_prodi']!="Non-Teknik") 
+                                echo "<option value='$row[id_prodi]'>$row[nama_prodi]</option>";
+                                }
+                                ?>
+                            </select>
                             <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3">Mata Kuliah</label>
                         <div class="col-md-9">
-                            <input name="nama_kuliah" type="text" class="form-control" readonly>
+                            <select id="mk" name="id_kuliah" class="form-control">
+                                <option value="">--Pilih Mata Kuliah--</option>
+                            </select>
                             <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3">Dosen</label>
                         <div class="col-md-9">
-                            <input name="nama_dosen" type="text" class="form-control" readonly>
+                            <div class="row">
+                                <div class="col-md-5">
+                                <select id="asdos" name="asal_prodi" class="form-control">
+                                    <option  value="">--Asal Dosen--</option>
+                                    <?php foreach($prodi as $row){ 
+                                        echo "<option value='$row[id_prodi]'>$row[nama_prodi]</option>";
+                                        }
+                                    ?>
+                                </select>
+                                </div>
+                                <div class="col-md-7">
+                                    <select id="dosen" name="id_dosen" class="form-control">
+                                        <option value="">--Pilih Dosen Pengampu--</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Kelas</label>
+                        <div class="col-md-9">
+                            <input name="kelas" type="text" class="form-control" readonly>
                             <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3">Kapasitas Kelas</label>
                         <div class="col-md-9">
-                            <input name="kapasitas" type="number" class="form-control" readonly>
+                            <input name="kapasitas" type="number" class="form-control" >
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -294,8 +436,9 @@ function delete_data(id)
                         <label class="control-label col-md-3">Ruangan</label>
                         <div class="col-md-9">
                             <select name="ruang" class="form-control">
+                                <option value="">--Pilih Ruangan--</option>
                                 <?php foreach($ruang as $row){
-                                    echo "<option value='$row[id_ruang]'>$row[nama_ruang]</option>";
+                                    echo "<option value='$row[id_ruang]'>$row[nama_ruang]  $row[kapasitas_ruang]</option>";
                                 }
                                 ?>
                             </select>
@@ -306,6 +449,7 @@ function delete_data(id)
                         <label class="control-label col-md-3">Hari</label>
                         <div class="col-md-9">
                             <select name="hari" class="form-control">
+                                <option value="">--Pilih Hari Kuliah--</option>
                                 <option value="Senin">Senin</option>
                                 <option value="Selasa">Selasa</option>
                                 <option value="Rabu">Rabu</option>

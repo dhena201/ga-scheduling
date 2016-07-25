@@ -80,7 +80,12 @@ class Ruang_model extends CI_Model {
         $query = $this->db->get();
         return $query->num_rows();
     }
+    public function get_by_size($size){
+        $sql = 'select * from ruang where kapasitas_ruang >= ?';
+        $query = $this->db->query($sql,$size);
  
+        return $query->result_array();
+    }
     public function save($data){
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();

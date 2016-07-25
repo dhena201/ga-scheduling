@@ -51,14 +51,14 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                 <h3 id="myModalLabel">Delete Confirmation <i class="fa fa-warning modal-icon"></i></h3>
+                                 <h3 id="myModalLabel"><i class="fa fa-warning modal-icon"></i> Konfirmasi Hapus</h3>
 
                             </div>
                             <div class="modal-body">
-                                <h4>Anda Yakin Menghapus Data Ini?</h4>
+                                <h4 style="text-align:center">Anda Yakin Menghapus Data Ini?</h4>
                             </div>
                             <div class="modal-footer">
-                              <a href="javascript:void()" class="btn btn-danger"  id="modalDelete" >Delete</a>
+                              <a href="javascript:void()" class="btn btn-danger"  id="modalDelete" >Hapus</a>
                               <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button> 
                             </div>
                         </div>

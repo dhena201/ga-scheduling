@@ -2,23 +2,30 @@
 $(document).ready( function(){
 $('#infoMessage').hide();
 });
+
 function edit_data()
 {
-    save_method = 'update';
+    save_method = 'profil';
+    $('#method').val('profil');
+    $('#form-password').hide();
+    $('#form-profil').show();
     $('#form')[0].reset(); // reset form on modals
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
     $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-    $('.modal-title').text('Ubah Data'); // Set title to Bootstrap modal title
+    $('.modal-title').text('Ubah Profil'); // Set title to Bootstrap modal title
     
 }
 function edit_pass()
 {
-    save_method = 'update';
+    save_method = 'password';
+    $('#method').val('password');
+    $('#form-password').show();
+    $('#form-profil').hide();
     $('#form')[0].reset(); // reset form on modals
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
-    $('#modal_password').modal('show'); // show bootstrap modal when complete loaded
+    $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
     $('.modal-title').text('Ubah Password'); // Set title to Bootstrap modal title
     
 }
@@ -28,8 +35,11 @@ function save()
     $('#btnSave').attr('disabled',true); //set button disable
     
     var val = $('#idform').val();
-    var url = "<?php echo base_url('user/ajax_update/')?>/"+val;
-    
+    if(save_method == 'profil') {
+        url = "<?php echo base_url('profil/change_profil')?>";
+    } else if(save_method == 'password'){
+        url = "<?php echo base_url('profil/change_password')?>";
+    }
  
     // ajax adding data to database
     $.ajax({
@@ -39,10 +49,14 @@ function save()
         dataType: "JSON",
         success: function(data)
         {
-
             if(data.status) //if success close modal and reload ajax table
             {
-                $('[name="password"]').parent().prev().text('Password');
+                $('#modal_form').modal('hide');
+                if(data.update){
+                    $('#username-label').html(data.update['username']);
+                    $('#nama-label').html(data.update['name']);
+                    $('#email-label').html(data.update['email']);    
+                }
                 if(data.message){
                     console.log(data.message);
                     $('#msg').html(data.message);
@@ -57,12 +71,6 @@ function save()
                         $('[name="'+data.inputerror[i]+'"]').parent().parent().addClass('has-error'); //select parent twice to select div form-group class and add has-error class
                         $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]); //select span help-block class set text error string
                     }
-                }
-                
-                if(data.message){
-                    console.log(data.message);
-                    $('#msg').html(data.message);
-                    $('#infoMessage').show();
                 }
                 
             }
@@ -111,21 +119,21 @@ function save()
                 <div class="form-group">
                     <label class="col-md-2">Username</label>
                     <div class="col-md-10">
-                        <?php echo form_input($identity,'','class="form-control" disabled');?>
+                        <label id="username-label">: <?=$identity['value']?></label>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-2">Nama User</label>
                     <div class="col-md-10">
-                        <?php echo form_input($name, '', 'class="form-control"');?>
+                        <label id="nama-label">: <?=$name['value']?></label>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-2">Email</label>
                     <div class="col-md-10">
-                        <?php echo form_input($email, '', 'class="form-control"');?>
+                        <label id="email-label">: <?=$email['value']?></label>
                         <span class="help-block"></span>
                     </div>
                 </div>
@@ -152,61 +160,51 @@ function save()
                     <div class="callout callout-danger lead" id="infoMessage">
                         <p id="msg"></p>
                     </div>
-                    <input id="idform" type="hidden" value="<?= $this->session->userdata['user_id']?>" name="id"/>
-                    <div class="form-group">
-                        <label class="col-md-2">Username</label>
-                        <div class="col-md-10">
-                            <?php echo form_input($identity,'','class="form-control" disabled');?>
-                            <span class="help-block"></span>
+                    <input id="method" type="hidden" value="" name="method"/>
+                    <div id="form-profil">
+                        <div class="form-group">
+                            <label class="col-md-2">Username</label>
+                            <div class="col-md-10">
+                                <?php echo form_input($identity,'','class="form-control" readonly');?>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2">Nama User</label>
+                            <div class="col-md-10">
+                                <?php echo form_input($name, '', 'class="form-control"');?>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2">Email</label>
+                            <div class="col-md-10">
+                                <?php echo form_input($email, '', 'class="form-control"');?>
+                                <span class="help-block"></span>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-2">Nama User</label>
-                        <div class="col-md-10">
-                            <?php echo form_input($name, '', 'class="form-control"');?>
-                            <span class="help-block"></span>
+                    <div id="form-password">
+                        <div class="form-group">
+                            <label class="col-md-2">Password Lama</label>
+                            <div class="col-md-10">
+                                <?php echo form_input($old_password, '', 'class="form-control"');?>
+                                <span class="help-block"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-2">Email</label>
-                        <div class="col-md-10">
-                            <?php echo form_input($email, '', 'class="form-control"');?>
-                            <span class="help-block"></span>
+                        <div class="form-group">
+                            <label class="col-md-2">Password Baru</label>
+                            <div class="col-md-10">
+                                <?php echo form_input($new_password, '', 'class="form-control"');?>
+                                <span class="help-block"></span>
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<!-- End Bootstrap modal -->
-
-<!-- Bootstrap modal -->
-<div class="modal modal-flex fade" id="modal_password" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 class="modal-title">Form</h3>
-            </div>
-            <div class="modal-body form">
-                <form action="#" id="form" class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-md-2">Password Baru</label>
-                        <div class="col-md-10">
-                            <?php echo form_input($password, '', 'class="form-control"');?>
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-2">Confirm Password</label>
-                        <div class="col-md-10">
-                            <?php echo form_input($password_confirm, '', 'class="form-control"');?>
-                            <span class="help-block"></span>
+                        <div class="form-group">
+                            <label class="col-md-2">Confirm Password</label>
+                            <div class="col-md-10">
+                                <?php echo form_input($new_password_confirm, '', 'class="form-control"');?>
+                                <span class="help-block"></span>
+                            </div>
                         </div>
                     </div>
                 </form>

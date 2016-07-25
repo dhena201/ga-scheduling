@@ -60,7 +60,7 @@ class Program_studi extends MY_Controller {
     }
  
     public function ajax_update(){
-        $this->_validate();
+        $this->_validate('update');
         $data = array(
 	                'id_prodi' => $this->input->post('id'),
 	                'nama_prodi' => $this->input->post('nama_prodi'),
@@ -76,16 +76,18 @@ class Program_studi extends MY_Controller {
     }
  
  
-    private function _validate()
+    private function _validate($method=NULL)
     {
         $data['error_string'] = array();
         $data['inputerror'] = array();
         $data['status'] = TRUE;
 
-        if($prodi = $this->prodi->get_by_name($this->input->post('nama_prodi'))){
-            $data['inputerror'][] = 'nama_prodi';
-            $data['error_string'][] = 'Program Studi Diatas Sudah Ada';
-            $data['status'] = FALSE;
+        if($method!='update'){
+            if($prodi = $this->prodi->get_by_name($this->input->post('nama_prodi'))){
+                $data['inputerror'][] = 'nama_prodi';
+                $data['error_string'][] = 'Program Studi Diatas Sudah Ada';
+                $data['status'] = FALSE;
+            }
         }
  
         if($this->input->post('nama_prodi') == '')

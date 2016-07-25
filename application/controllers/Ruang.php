@@ -61,10 +61,9 @@ class Ruang extends MY_Controller {
         $insert = $this->ruang->save($data);
         echo json_encode(array("status" => TRUE));
     }
- 
     public function ajax_update()
     {
-        $this->_validate();
+        $this->_validate('update');
         $data = array(
                 'id_ruang' => $this->input->post('id'),
                 'kapasitas_ruang' => $this->input->post('kapasitas'),
@@ -81,16 +80,18 @@ class Ruang extends MY_Controller {
     }
  
  
-    private function _validate()
+    private function _validate($method=NULL)
     {
 
         $data['error_string'] = array();
         $data['inputerror'] = array();
         $data['status'] = TRUE;
-        if($ruang = $this->ruang->get_by_name($this->input->post('nama_ruang'))){
-            $data['inputerror'][] = 'nama_ruang';
-            $data['error_string'][] = 'Ruangan Dengan Nama Diatas Sudah Ada';
-            $data['status'] = FALSE;
+        if($method!='update'){
+            if($ruang = $this->ruang->get_by_name($this->input->post('nama_ruang'))){
+                $data['inputerror'][] = 'nama_ruang';
+                $data['error_string'][] = 'Ruangan Dengan Nama Diatas Sudah Ada';
+                $data['status'] = FALSE;
+            }
         }
         if($this->input->post('nama_ruang') == '')
         {

@@ -5,7 +5,7 @@
     </button>
     <div class="navbar-brand">
         <a href="<?php echo base_url(); ?>">
-            <img src="<?php echo base_url('asset/images/flex-admin-logo.png'); ?>" data-1x="<?php echo base_url('asset/images/flex-admin-logo@1x.png');?>" data-2x="<?php echo base_url('asset/images/flex-admin-logo@2x.png');?>" class="hisrc img-responsive" alt="">
+            <!-- <img src="<?php echo base_url('asset/images/admin-logo@1x.png'); ?>" class="img-responsive" alt=""> -->
         </a>
     </div>
 </div>

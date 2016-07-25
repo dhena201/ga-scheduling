@@ -5,7 +5,7 @@ class Jadwal_model extends CI_Model {
 
 	var $table = 'jadwal';
     var $tmp = 'tmp_jadwal';
-    var $column = array('nama_kuliah','nama_dosen','nama_prodi','kelas','kapasitas','nama_ruang','hari','jam'); //set column field database for order and search
+    var $column = array('kd_kuliah','nama_kuliah','nama_dosen','nama_prodi','kelas','kapasitas','nama_ruang','hari','jam'); //set column field database for order and search
     var $order = array('nama_prodi' => 'desc'); // default order
 	public function __construct(){
 		parent::__construct();

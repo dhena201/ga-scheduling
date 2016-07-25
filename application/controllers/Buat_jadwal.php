@@ -19,11 +19,13 @@ class Buat_jadwal extends MY_Controller {
         $this->load->model('Jadwal_model','jadwal',TRUE);
         $this->load->model('Kelas_model','kelas',TRUE);
         $this->load->model('Ruang_model','ruang',TRUE);
+        $this->load->model('Prodi_model','prodi',TRUE);
 	}
 
 	public function index(){
         $this->data['thn_ajar'] = $this->jadwal->get_thn_ajar();
         $this->data['ruang'] = $this->ruang->get_datatables();
+        $this->data['prodi'] = $this->prodi->get_datatables();
         $this->data['datakelas'] = $this->kelas->get_datatables();
 		$this->load->view('template',$this->data);
 	}
@@ -39,6 +41,7 @@ class Buat_jadwal extends MY_Controller {
                 "id_jadwal" => $jadwal['id_jadwal'],
                 "thn_ajar" => $jadwal['thn_ajar'],
                 "nama_kuliah" => $jadwal['nama_kuliah'],
+                "kd_kuliah" => $jadwal['kd_kuliah'],
                 "nama_dosen" => $jadwal['nama_dosen'],
                 "nama_prodi" => $jadwal['nama_prodi'],
                 "kelas" => $jadwal['kelas'],

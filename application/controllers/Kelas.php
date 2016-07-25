@@ -29,6 +29,7 @@ class Kelas extends MY_Controller {
             $no++;
             $row = array(
             	"id_kelas" => $kelas['id_kelas'],
+                "kd_kuliah" => $kelas['kd_kuliah'],
             	"nama_kuliah" => $kelas['nama_kuliah'],
             	"nama_dosen" => $kelas['nama_dosen'],
             	"nama_prodi" => $kelas['nama_prodi'],

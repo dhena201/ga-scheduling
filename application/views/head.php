@@ -4,7 +4,7 @@
     <meta name="author" content="">
 
     <title>SPKO</title>
-
+    <link href="<?php echo base_url('asset/js/plugins/datatables/extensions/Buttons/css/buttons.dataTables.min.css'); ?>" rel="stylesheet">
     <!-- PACE LOAD BAR PLUGIN - This creates the subtle load bar effect at the top of the page. -->
     <link href="<?php echo base_url('asset/css/plugins/pace/pace.css'); ?>" rel="stylesheet">
     <script src="<?php echo base_url('asset/js/plugins/pace/pace.js'); ?>"></script>

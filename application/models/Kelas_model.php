@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Kelas_model extends CI_Model {
 
 	var $table = 'kelas';
-    var $column = array('nama_kuliah','nama_dosen','kelas','nama_prodi','kapasitas'); //set column field database for order and search
+    var $column = array('kd_kuliah','nama_kuliah','nama_dosen','kelas','nama_prodi','kapasitas'); //set column field database for order and search
     var $order = array('nama_prodi' => 'desc'); // default order
 	public function __construct(){
 		parent::__construct();
@@ -16,8 +16,8 @@ class Kelas_model extends CI_Model {
         $this->db->join('mata_kuliah','kelas.id_kuliah=mata_kuliah.id_kuliah');
         $this->db->join('dosen','kelas.id_dosen=dosen.id_dosen');
  		$this->db->join('prodi','prodi.id_prodi=mata_kuliah.id_prodi');
+        $this->db->where('mata_kuliah.id_prodi','1');
         $i = 0;
-     
         foreach ($this->column as $item) // loop column
         {
             if(isset($_POST['search']['value'])) // if datatable send POST for search
@@ -78,14 +78,18 @@ class Kelas_model extends CI_Model {
         return $query->num_rows();
     }
 
- 
     public function get_by_id($id){
         $this->_get_datatables_query();
         $this->db->where('id_kelas',$id);
         $query = $this->db->get();
         return $query->row();
     }
- 
+    public function get_by_prodi($id){
+        $this->_get_datatables_query();
+        $this->db->where('mata_kuliah.id_prodi',$id);
+        $query = $this->db->get();
+        return $query->row();
+    }
     public function save($data){
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();

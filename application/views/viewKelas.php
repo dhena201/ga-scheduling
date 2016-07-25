@@ -17,6 +17,7 @@
                 <table id="example-table" class="table table-striped table-bordered table-hover table-green" width="100%">
                     <thead>
                         <tr>
+                            <th>Kode</th>
                             <th>Mata Kuliah</th>
                             <th>Dosen</th>
                             <th>Kelas</th>
@@ -58,6 +59,7 @@ $(document).ready(function() {
             "type": "POST"
         },
         "columns" :[
+            {"data" : "kd_kuliah"},
             {"data" : "nama_kuliah"},
             {"data" : "nama_dosen"},
             {"data" : "kelas"},
@@ -127,7 +129,7 @@ function get_mk(id,id_kuliah){
         dataType : "JSON",
         success: function(data){
             $.each(data, function(i, data){
-                $("#mk").append("<option value='"+data.id_kuliah+"'>"+data.nama_kuliah+"</option>");
+                $("#mk").append("<option value='"+data.id_kuliah+"'>"+data.kd_kuliah+"   "+data.nama_kuliah+"</option>");
             });
             if(id_kuliah){
                 $('#mk').val(id_kuliah);

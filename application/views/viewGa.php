@@ -63,6 +63,7 @@
                 <table id="example-table" class="table table-striped table-bordered table-hover table-green" width="100%">
                     <thead>
                         <tr>
+                            <th>Kode</th>
                             <th>Mata Kuliah</th>
                             <th>Dosen</th>
                             <th>Program Studi</th>
@@ -144,7 +145,14 @@ $(document).ready(function() {
       $('#thn_ajar').attr('disabled',false);
       $('#Reset').hide();
     });
-
+    $("#asdos").change(function(){
+        $("#dosen > option").remove();
+        $("#dosen").append("<option value=''>--Pilih Dosen Pengampu--</option>");
+        var id = $("#asdos").val();
+        if(id){
+            get_dosen(id);
+        }
+    });
 
     //end of event handler
 
@@ -210,7 +218,25 @@ function run_server_ga(thnajar){
   }
 
 }
-
+function get_dosen(id,id_dosen){
+    $.ajax({
+        url : "<?php echo base_url('kelas/ajax_get_dosen/')?>/" + id,
+        type : "GET",
+        dataType : "JSON",
+        success: function(data){
+            $.each(data, function(i, data){
+                $("#dosen").append("<option value='"+data.id_dosen+"'>"+data.nama_dosen+"</option>");
+                console.log(data.id_dosen);
+            });
+            if(id_dosen){
+                $('#dosen').val(id_dosen);
+            }
+        },
+         error: function (jqXHR, textStatus, errorThrown){
+            alert('Error get data from ajax');
+        }
+    });
+}
 function ajax_list(thnajar){
      
     table = $('#example-table').DataTable({
@@ -224,6 +250,7 @@ function ajax_list(thnajar){
           "type": "POST"
       },
       "columns" :[
+          {"data" : "kd_kuliah"},
           {"data" : "nama_kuliah"},
           {"data" : "nama_dosen"},
           {"data" : "nama_prodi"},
@@ -267,23 +294,37 @@ function edit_data(id)
     $('.help-block').empty(); // clear error string
  
     //Ajax Load data from ajax
+     
     $.ajax({
         url : "<?php echo base_url('Buat_jadwal/ajax_edittmp/')?>/" + id,
         type: "GET",
         dataType: "JSON",
         success: function(data)
         {
- 
+            $('[name="kelas"]').val(data.kelas);
             $('[name="id"]').val(data.id_jadwal);
             $('[name="thnajar"]').val(data.thn_ajar);
             $('[name="id_kelas"]').val(data.id_kelas);
             $('[name="nama_prodi"]').val(data.nama_prodi);
             $('[name="nama_kuliah"]').val(data.nama_kuliah);            
-            $('[name="nama_dosen"]').val(data.nama_dosen);
             $('[name="kapasitas"]').val(data.kapasitas);
             $('[name="ruang"]').val(data.id_ruang);
             $('[name="hari"]').val(data.hari);
             $('[name="jam"]').val(data.jam);
+            $.ajax({
+                url : "<?php echo base_url('Dosen/ajax_edit/')?>/" + data.id_dosen,
+                type: "GET",
+                dataType: "JSON",
+                success: function(dat)
+                {
+                    get_dosen(dat.id_prodi,dat.id_dosen);
+                    $('[name="asal_prodi"]').val(dat.id_prodi);
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    alert('Error get data from ajax');
+                }
+            });
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Ubah Data'); // Set title to Bootstrap modal title
  
@@ -403,14 +444,35 @@ function savetmp(thnajar)
                     <div class="form-group">
                         <label class="control-label col-md-3">Dosen</label>
                         <div class="col-md-9">
-                            <input name="nama_dosen" type="text" class="form-control" readonly>
+                            <div class="row">
+                                <div class="col-md-5">
+                                <select id="asdos" name="asal_prodi" class="form-control">
+                                    <option  value="">--Asal Dosen--</option>
+                                    <?php foreach($prodi as $row){ 
+                                        echo "<option value='$row[id_prodi]'>$row[nama_prodi]</option>";
+                                        }
+                                    ?>
+                                </select>
+                                </div>
+                                <div class="col-md-7">
+                                    <select id="dosen" name="id_dosen" class="form-control">
+                                        <option value="">--Pilih Dosen Pengampu--</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Kelas</label>
+                        <div class="col-md-9">
+                            <input name="kelas" type="text" class="form-control" readonly="">
                             <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3">Kapasitas Kelas</label>
                         <div class="col-md-9">
-                            <input name="kapasitas" type="number" class="form-control" readonly>
+                            <input name="kapasitas" type="number" class="form-control" >
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -419,7 +481,7 @@ function savetmp(thnajar)
                         <div class="col-md-9">
                             <select name="ruang" class="form-control">
                                 <?php foreach($ruang as $row){
-                                    echo "<option value='$row[id_ruang]'>$row[nama_ruang]</option>";
+                                    echo "<option value='$row[id_ruang]'>$row[nama_ruang]  $row[kapasitas_ruang]</option>";
                                 }
                                 ?>
                             </select>

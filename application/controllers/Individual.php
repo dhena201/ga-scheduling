@@ -9,6 +9,10 @@ require_once('Fitness.php');  //supporting class file
 
  class Individual {
 
+    // public function __construct(){
+    //     parent::__construct();
+    // }
+
     public $defaultGeneLength = 64;
     public  $waktuhabis = array();
     // public  $status = array();
@@ -25,6 +29,7 @@ require_once('Fitness.php');  //supporting class file
     // Create a random individual
     public function generateIndividual($size) {
         for ($i=0; $i < $size; $i++ )  {
+            // $ruang = $this->getRuang(Fitness::$kelas[$i]['kapasitas']);
             $this->genes1[$i] = Fitness::$ruang[rand(0, count(Fitness::$ruang) - 1)];
         	$this->genes2[$i] = rand(0,(10 - (Fitness::$kelas[$i]['sks']))) ;
             $this->waktuhabis[$i] = $this->genes2[$i] + Fitness::$kelas[$i]['sks'];
@@ -82,7 +87,20 @@ require_once('Fitness.php');  //supporting class file
         }
         return $this->fitness;
     }
-
+    // public function getRuang($size){
+    //     $this->load->model('Ruang_model','ruang',TRUE);
+    //     $list = $this->ruang->get_by_size($size);
+    //     $ruang = array();
+    //     foreach ($list as $data) {
+    //         $row = array(
+    //             'id_ruang' => $data['id_ruang'],
+    //             'nama_ruang' => $data['nama_ruang'],
+    //             'kapasitas' => $data['kapasitas_ruang'],
+    //             );
+    //         $ruang[] = $row;
+    //     }
+    //     return $ruang;
+    // }
     
 }
 

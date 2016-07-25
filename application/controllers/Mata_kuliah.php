@@ -29,6 +29,7 @@ class Mata_kuliah extends MY_Controller {
             $no++;
             $row = array(
             'id' => $matkul['id_kuliah'],
+            'kd_kuliah' => $matkul['kd_kuliah'],
             'nama_kuliah' => $matkul['nama_kuliah'],
             'sks' => $matkul['sks'],
             'semester' => $matkul['semester'],
@@ -58,6 +59,7 @@ class Mata_kuliah extends MY_Controller {
         $this->_validate();
         $data = array(
                 'id_kuliah' => '',
+                'kd_kuliah' => $this->input->post('kd_kuliah'),
                 'nama_kuliah' => $this->input->post('nama_kuliah'),
                 'sks' => $this->input->post('sks'),
                 'semester' => $this->input->post('semester'),
@@ -71,6 +73,7 @@ class Mata_kuliah extends MY_Controller {
         $this->_validate();
         $data = array(
 	            'id_kuliah' => $this->input->post('id'),
+                'kd_kuliah' => $this->input->post('kd_kuliah'),
                 'nama_kuliah' => $this->input->post('nama_kuliah'),
                 'sks' => $this->input->post('sks'),
                 'semester' => $this->input->post('semester'),

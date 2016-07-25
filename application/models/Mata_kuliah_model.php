@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Mata_kuliah_model extends CI_Model {
 
 	var $table = 'mata_kuliah';
-	var $column = array('nama_kuliah','sks','semester','nama_prodi'); //set column field database for order and search
+	var $column = array('kd_kuliah','nama_kuliah','sks','semester','nama_prodi'); //set column field database for order and search
     var $order = array( array(  'field' => 'nama_prodi',
     							'type' => 'asc'
     						),
@@ -86,6 +86,7 @@ class Mata_kuliah_model extends CI_Model {
     public function get_by_prodi($id){
         $this->db->from($this->table);
         $this->db->where('id_prodi',$id);
+        $this->db->order_by('kd_kuliah','desc');
         $query = $this->db->get();
         return $query->result();
     }

@@ -17,6 +17,7 @@
                 <table id="table" class="table table-striped table-bordered table-hover table-green" width="100%">
                     <thead>
                         <tr>
+                            <th>Kode</th>
                             <th>Mata Kuliah</th>
                             <th>SKS</th>
                             <th>Semester</th>
@@ -53,6 +54,7 @@ $(document).ready(function() {
             "type": "POST"
         },
         "columns" :[
+            {"data" : "kd_kuliah"},
             {"data" : "nama_kuliah"},
             {"data" : "sks"},
             {"data" : "semester"},
@@ -117,6 +119,7 @@ function edit_data(id)
         {
  
             $('[name="id"]').val(data.id_kuliah);
+            $('[name="kd_kuliah"]').val(data.kd_kuliah);
             $('[name="nama_kuliah"]').val(data.nama_kuliah);
             $('[name="sks"]').val(data.sks);
             $('[name="semester"]').val(data.semester);
@@ -225,6 +228,13 @@ function delete_data(id)
                 <form action="#" id="form" class="form-horizontal">
                     <input type="hidden" value="" name="id"/>
                     <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Kode Mata Kuliah</label>
+                            <div class="col-md-9">
+                                <input name="kd_kuliah" placeholder="Kode Mata Kuliah" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="control-label col-md-3">Nama Mata Kuliah</label>
                             <div class="col-md-9">
