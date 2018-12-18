@@ -1,6 +1,6 @@
 {
     
-    "sProcessing":   "<div class='pagination-centered' style='padding:auto;text-align:center;'><img src='http://localhost/tadev/asset/images/loading.gif' width='300'/></div>",
+    "sProcessing":   "<div class='pagination-centered' style='padding:auto;text-align:center;'><img src='../../../images/loading.gif' width='300'/></div>",
     "sLengthMenu":   "Tampilkan _MENU_ data",
     "sZeroRecords":  "Tidak ditemukan data yang sesuai",
     "sInfo":         "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",

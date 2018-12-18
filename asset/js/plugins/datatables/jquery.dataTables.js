@@ -11663,7 +11663,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sUrl": "http://localhost/tadev/asset/js/plugins/datatables/dataTables.lang.indonesia.js",
+			"sUrl": "./dataTables.lang.indonesia.js",
 	
 	
 			/**
