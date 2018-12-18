@@ -214,7 +214,7 @@ class Profil extends MY_Controller {
                 $data['inputerror'][] = 'new';
                 $data['error_string'][] = 'Password Baru Belum Diisi';
                 $data['status'] = FALSE;
-            }elseif(strlen($this->input->post('new'))<8 or strlen($this->input->post('password'))>20){
+            }elseif(strlen($this->input->post('new'))<8 or strlen($this->input->post('new'))>20){
                 $data['inputerror'][] = 'new';
                 $data['error_string'][] = 'Password Paling Sedikit 8 Karakter dan Maksimal 20 Karakter';
                 $data['status'] = FALSE;

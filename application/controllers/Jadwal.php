@@ -23,8 +23,9 @@ class Jadwal extends MY_Controller {
         $this->data['ruang'] = $this->ruang->get_datatables();
 		$this->load->view('template',$this->data);
 	}
-	public function ajax_list($thnajar)
+	public function ajax_list()
     {
+        $thnajar = $this->input->get('thnajar');
         $list = $this->jadwal->get_datatables($thnajar);
         $data = array();
         // $no = $_POST['start'];

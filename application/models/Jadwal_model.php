@@ -15,14 +15,11 @@ class Jadwal_model extends CI_Model {
         $this->db->select('*');
         $this->db->select("DATE_FORMAT(jam,'%H:%i') as jam");
         $this->db->from($this->table);
-        $this->db->join('kelas','jadwal.id_kelas=kelas.id_kelas');
-        $this->db->join('mata_kuliah','kelas.id_kuliah=mata_kuliah.id_kuliah');
-        $this->db->join('dosen','kelas.id_dosen=dosen.id_dosen');
+        $this->db->join('mata_kuliah','jadwal.id_kuliah=mata_kuliah.id_kuliah');
+        $this->db->join('dosen','jadwal.id_dosen=dosen.id_dosen');
  		$this->db->join('prodi','prodi.id_prodi=mata_kuliah.id_prodi');
         $this->db->join('ruang','jadwal.id_ruang=ruang.id_ruang');
-        if(isset($thn_ajar)){
-            $this->db->where('thn_ajar',$thn_ajar);
-        }
+        $this->db->where('thn_ajar',$thn_ajar);
         
         $i = 0;
      
@@ -62,9 +59,8 @@ class Jadwal_model extends CI_Model {
         $this->db->select('*');
         $this->db->select("DATE_FORMAT(jam,'%H:%i') as jam");
         $this->db->from($this->tmp);
-        $this->db->join('kelas','tmp_jadwal.id_kelas=kelas.id_kelas');
-        $this->db->join('mata_kuliah','kelas.id_kuliah=mata_kuliah.id_kuliah');
-        $this->db->join('dosen','kelas.id_dosen=dosen.id_dosen');
+        $this->db->join('mata_kuliah','jadwal.id_kuliah=mata_kuliah.id_kuliah');
+        $this->db->join('dosen','jadwal.id_dosen=dosen.id_dosen');
         $this->db->join('prodi','prodi.id_prodi=mata_kuliah.id_prodi');
         $this->db->join('ruang','tmp_jadwal.id_ruang=ruang.id_ruang');
         if(isset($thn_ajar)){
@@ -106,7 +102,7 @@ class Jadwal_model extends CI_Model {
     }
      
     function get_datatables($thn_ajar){
-    	$this->_get_datatables_query($thn_ajar);  
+    	$this->_get_datatables_query($thn_ajar);
         if(isset($_POST['length']) and $_POST['length']!= -1){
             $this->db->limit($_POST['length'], $_POST['start']); 
         }	

@@ -181,8 +181,9 @@ function ajax_list(thnajar){
 
     // Load data for the table's content from an Ajax source
     "ajax": {
-        "url": "<?php echo base_url('jadwal/ajax_list')?>/"+thnajar,
-        "type": "GET"
+        "url": "<?php echo base_url('jadwal/ajax_list')?>",
+        "type": "GET",
+        "data": {"thnajar":thnajar}
     },
     "columns" :[
         {"data" : "kd_kuliah"},

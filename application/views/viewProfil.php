@@ -35,6 +35,7 @@ function save()
     $('#btnSave').attr('disabled',true); //set button disable
     
     var val = $('#idform').val();
+    $('#method').val(save_method);
     if(save_method == 'profil') {
         url = "<?php echo base_url('profil/change_profil')?>";
     } else if(save_method == 'password'){
