@@ -246,8 +246,9 @@ function ajax_list(thnajar){
 
       // Load data for the table's content from an Ajax source
       "ajax": {
-          "url": "<?php echo base_url('Buat_jadwal/ajax_listtmp')?>/"+thnajar,
-          "type": "POST"
+          "url": "<?php echo base_url('Buat_jadwal/ajax_listtmp')?>",
+          "type": "POST",
+          "data": {"thnajar":thnajar}
       },
       "columns" :[
           {"data" : "kd_kuliah"},

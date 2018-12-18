@@ -59,8 +59,8 @@ class Jadwal_model extends CI_Model {
         $this->db->select('*');
         $this->db->select("DATE_FORMAT(jam,'%H:%i') as jam");
         $this->db->from($this->tmp);
-        $this->db->join('mata_kuliah','jadwal.id_kuliah=mata_kuliah.id_kuliah');
-        $this->db->join('dosen','jadwal.id_dosen=dosen.id_dosen');
+        $this->db->join('mata_kuliah','tmp_jadwal.id_kuliah=mata_kuliah.id_kuliah');
+        $this->db->join('dosen','tmp_jadwal.id_dosen=dosen.id_dosen');
         $this->db->join('prodi','prodi.id_prodi=mata_kuliah.id_prodi');
         $this->db->join('ruang','tmp_jadwal.id_ruang=ruang.id_ruang');
         if(isset($thn_ajar)){

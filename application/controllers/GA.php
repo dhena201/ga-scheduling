@@ -102,7 +102,10 @@ class GA extends MY_Controller{
     		$data = array(
     			'id_jadwal' => '',
                 'thn_ajar' => $thnajar,
-                'id_kelas' => Fitness::$kelas[$i]['id_kelas'],
+                'id_kuliah' => Fitness::$kelas[$i]['id_kuliah'],
+                'id_dosen' => Fitness::$kelas[$i]['id_dosen'],
+                'kelas' => Fitness::$kelas[$i]['kelas'],
+                'kapasitas' => Fitness::$kelas[$i]['kapasitas'],
                 'id_ruang' => $fittest->getGene1($i)['id_ruang'],
                 'hari' => $hariall[$fittest->getGene3($i)],
                 'jam' => $this->convertTime($fittest->getGene2($i))

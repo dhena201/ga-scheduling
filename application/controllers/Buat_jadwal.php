@@ -30,8 +30,9 @@ class Buat_jadwal extends MY_Controller {
 		$this->load->view('template',$this->data);
 	}
 
-	public function ajax_listtmp($thnajar)
+	public function ajax_listtmp()
     {
+        $thnajar = $this->input->post('thnajar');
         $list = $this->jadwal->get_datatablestmp($thnajar);
         $data = array();
         // $no = $_POST['start'];
@@ -73,7 +74,10 @@ class Buat_jadwal extends MY_Controller {
             $row = array(
                 "id_jadwal" => "",
                 "thn_ajar" => $jadwal['thn_ajar'],
-                "id_kelas" => $jadwal['id_kelas'],
+                "id_kuliah" => $jadwal['id_kuliah'],
+                "id_dosen" => $jadwal['id_dosen'],
+                "kelas" => $jadwal['kelas'],
+                "kapasitas" => $jadwal['kapasitas'],
                 "id_ruang" => $jadwal['id_ruang'],
                 "hari" => $jadwal['hari'],
                 "jam" => $jadwal['jam']
